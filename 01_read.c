@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:50 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/05 13:29:54 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/06 17:03:01 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,9 @@ int		read_cub(char **argv, t_cub *cub)
 
 	ret = 0;
 	eof = 1;
-	if ((fd = open(argv[1], O_RDONLY)) < 0)
+	if (argv[1])
+		ret = 0;
+	if ((fd = open("1.cub", O_RDONLY)) < 0)
 		return (print_error(OPEN_ERR));
 	while ((eof = get_next_line(fd, &line)) >= 0)
 	{

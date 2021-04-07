@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:53 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/05 20:48:53 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/06 17:36:00 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ t_cub	*init_cub(t_cub *cub)
 	cub->ceiling_color = 0;
 	cub->player.pos_x = 0;
 	cub->player.pos_y = 0;
+	cub->invalid_map = 0;
 	cub->map_buffer = NULL;
 	cub->map = init_list(cub->map);
 	cub->path = init_tex(cub->path);

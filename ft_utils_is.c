@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:31:13 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/06 15:42:01 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/06 16:57:46 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int		ft_isplayer(char c)
 		return (1);
 	return (-1);
 }
+
 int		ft_ismap(char *line)
 {
 	if (line[0] == 0)

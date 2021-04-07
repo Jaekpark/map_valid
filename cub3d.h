@@ -35,10 +35,19 @@
 
 typedef struct s_pos
 {
-	int	pos_x;
-	int pos_y;
+	double	pos_x;
+	double 	pos_y;
 }			t_pos;
 
+typedef struct	s_img
+{
+	void	*img;
+	int		*data;
+	int		bpp;
+	int		endian;
+	int		img_width;
+	int		img_height;
+}				t_img;
 typedef struct s_node
 {
 	char	*line;
@@ -73,12 +82,17 @@ typedef struct	s_cub
 	int	save_opt;
 	int floor_color;
 	int ceiling_color;
+	int	invalid_map;
 	char **map_buffer;
 	t_pos	player;
 	t_list	*map;
 	t_tex	*path;
 }				t_cub;
 
+typedef struct 	s_game
+{
+
+}	t_game;
 // list_to_buffer
 void	list_to_buffer(t_cub *cub);
 char	*make_blank(int count);
@@ -86,10 +100,10 @@ int		set_base_width(char **map_buffer);
 void	set_map_buffer(t_cub *cub);
 
 // map_valid
-int		map_valid(t_cub *cub, char **visited, int x, int y);
+void	map_dfs(t_cub *cub, char **visited, int x, int y);
 int		find_player(t_cub *cub);
 int		map_rows(char **map);
-int		validation(t_cub *cub);
+int		map_validation(t_cub *cub);
 char	**ft_strdup_double(char **s);
 void	print_double_ptr(char **s);
 
