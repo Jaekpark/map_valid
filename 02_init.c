@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:53 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/06 17:36:00 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/11 16:16:04 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,37 @@ t_cub	*init_cub(t_cub *cub)
 	cub->rows = 0;
 	cub->floor_color = 0;
 	cub->ceiling_color = 0;
-	cub->player.pos_x = 0;
-	cub->player.pos_y = 0;
+	cub->player.x = 0;
+	cub->player.y = 0;
+	cub->dir.x = 0;
+	cub->dir.y = 0;
+	cub->direction = 0;
 	cub->invalid_map = 0;
 	cub->map_buffer = NULL;
 	cub->map = init_list(cub->map);
 	cub->path = init_tex(cub->path);
 	return (cub);
+}
+
+t_game 	*init_game(t_cub *cub, t_game *game)
+{
+	if (!(game = malloc(sizeof(t_game))))
+		return (NULL);
+	game->mlx = mlx_init();
+	game->win = mlx_new_window(game->mlx, cub->width, cub->height, "cub3D");
+	game->img.img = mlx_new_image(game->mlx, cub->width, cub->height);
+	game->img.data = (int *)mlx_get_data_addr(game->img.img, &game->img.bpp, &game->img.size_l, &game->img.endian);
+	game->mv_speed = 0.05;
+	game->rot_speed = 0.05;
+	game->mv_hor.x = 0;
+	game->mv_hor.y = 0;
+	game->mv_ver.x = 0;
+	game->mv_ver.y = 0;
+	game->plane.x = 0;
+	game->plane.y = 0.66;
+	game->player.x = cub->player.x;
+	game->player.y = cub->player.y;
+	game->dir.x = cub->dir.x;
+	game->dir.y = cub->dir.y;
+	return (game);
 }

@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 18:03:47 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/05 12:46:25 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/09 11:30:35 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int parsing_path(t_cub *cub, char *line, int index)
 		cub->path->floor = ft_strdup(path[1]);
 	else if (index == CEIL_TEX)
 		cub->path->ceil = ft_strdup(path[1]);
-	split_mem_free(path);
+	double_ptr_mem_free(path);
 	return (1);
 }
 
@@ -118,14 +118,14 @@ int parsing_color(t_cub *cub, char *line, int index)
 		return (-1);
 	if (!(rgb = make_color(color)))
 	{
-		split_mem_free(color);	
+		double_ptr_mem_free(color);	
 		return (-1);
 	}
 	if (index == CEIL_COL)
 		cub->ceiling_color = rgb;
 	else if (index == FLOOR_COL)
 		cub->floor_color = rgb;
-	split_mem_free(color);
+	double_ptr_mem_free(color);
 	return (1);
 }
 
@@ -142,7 +142,7 @@ int parsing_resolution(t_cub *cub, char *line)
 		return (-1);
 	cub->width = ft_atoi(display_size[1]);
 	cub->height = ft_atoi(display_size[2]);
-	split_mem_free(display_size);
+	double_ptr_mem_free(display_size);
 	return (1);	
 }
 

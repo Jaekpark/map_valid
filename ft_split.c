@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 19:09:41 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/04 20:10:56 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/09 11:27:41 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static void		mem_allocate(char **dest, int *size, int count)
 	}
 }
 
-void			split_mem_free(char **str)
+void			double_ptr_mem_free(char **str)
 {
 	int		i;
 

@@ -5,10 +5,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "./mlx/mlx.h"
 
 # define MAP_EXTENSION ".cub"
 # define VALID_CHAR " 012NSEW"
 # define SAVE "--save"
+# define DIRECTION "NSEW"
 
 # define OPEN_MAX 32
 # define BUFFER_SIZE 128
@@ -33,21 +35,26 @@
 # define EMPTY_LINE 10
 # define MAP_LINE 11
 
+# define X_EVENT_KEY_PRESS 2
+# define X_EVENT_KEY_RELEASE 3
+# define X_EVENT_KEY_EXIT 17
 typedef struct s_pos
 {
-	double	pos_x;
-	double 	pos_y;
+	double	x;
+	double 	y;
 }			t_pos;
 
 typedef struct	s_img
 {
 	void	*img;
 	int		*data;
+	int		size_l;
 	int		bpp;
 	int		endian;
 	int		img_width;
 	int		img_height;
 }				t_img;
+
 typedef struct s_node
 {
 	char	*line;
@@ -74,6 +81,7 @@ typedef struct s_tex
 
 typedef struct	s_cub
 {
+	char	direction;
 	int is_map;
 	int width;
 	int height;
@@ -85,14 +93,27 @@ typedef struct	s_cub
 	int	invalid_map;
 	char **map_buffer;
 	t_pos	player;
+	t_pos	dir;
 	t_list	*map;
 	t_tex	*path;
 }				t_cub;
 
 typedef struct 	s_game
 {
-
+	t_cub *cub;
+	t_pos player;
+	t_pos mv_ver;
+	t_pos mv_hor;
+	t_pos dir;
+	t_pos plane;
+	t_img img;
+	void	*mlx;
+	void	*win;
+	double mv_speed;
+	double rot_speed;
+	
 }	t_game;
+
 // list_to_buffer
 void	list_to_buffer(t_cub *cub);
 char	*make_blank(int count);
@@ -106,6 +127,7 @@ int		map_rows(char **map);
 int		map_validation(t_cub *cub);
 char	**ft_strdup_double(char **s);
 void	print_double_ptr(char **s);
+void	set_player_dir(t_cub *cub);
 
 // read
 void	print_node(t_list *list);
@@ -137,7 +159,7 @@ int		get_next_line(int fd, char **line);
 
 // split
 char	**ft_split(char const *s, char c);
-void	split_mem_free(char **str);
+void	double_ptr_mem_free(char **str);
 
 // check
 int		check_file_name(const char *file_name);
@@ -152,6 +174,7 @@ int		print_error(int error);
 t_list	*init_list(t_list *list);
 t_cub	*init_cub(t_cub *cub);
 t_tex	*init_tex(t_tex *path);
+t_game	*init_game(t_cub *cub, t_game *game);
 
 // parsing
 int		parsing_path(t_cub *cub, char *line, int index);

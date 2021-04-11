@@ -8,16 +8,19 @@ OBJS			= $(SRCS:.c=.o)
 CC				= gcc
 RM				= rm -f
 CFLAGS			= -O3 -Wall -Wextra -Werror -I.
-
-NAME			= cub3d
+LIBS 			= -L./mlx -lmlx -framework OpenGL -framework Appkit -lm
+MLX				= libmlx.a
+NAME			= cub3D
 
 all:			$(NAME)
 
-$(NAME):		$(OBJS)
-				gcc ${CFLAGS} -o ${NAME} ${OBJS}
+$(NAME):		$(MLX) $(OBJS)
+				make all -C ./mlx
+				gcc $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS)
 
 
 clean:
+				$(MAKE) -C mlx clean
 				$(RM) $(OBJS)
 
 fclean:			clean

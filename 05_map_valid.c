@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 11:35:54 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/06 19:03:16 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/11 16:43:10 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,30 +53,44 @@ int		find_player(t_cub *cub)
 {
 	int x;
 	int y;
+	int	find;
 
 	x = 0;
+	find = 0;
 	while(cub->map_buffer[x] != NULL)
 	{
 		y = 0;
 		while (cub->map_buffer[x][y] != '\0')
 		{
-			if (cub->map_buffer[x][y] == 'N' || cub->map_buffer[x][y] == 'E')
+			if (ft_strchr(DIRECTION, cub->map_buffer[x][y]))
 			{
-				cub->player.pos_x = x;
-				cub->player.pos_y = y;
-				return (1);
-			}
-			else if (cub->map_buffer[x][y] == 'W' || cub->map_buffer[x][y] == 'S')
-			{
-				cub->player.pos_x = x;
-				cub->player.pos_y = y;
-				return (1);
+				if (find == 0)
+				{
+					cub->player.x = x;
+					cub->player.y = y;
+					cub->direction = cub->map_buffer[x][y];
+					find = 1;
+				}
+				else if (find == 1)
+					return (-1);
 			}
 			y++;
 		}
 		x++;
 	}
 	return (-1);
+}
+
+void	set_player_dir(t_cub *cub)
+{
+	if (cub->direction == 'N')
+		cub->dir.x = -1;
+	else if (cub->direction == 'S')
+		cub->dir.x = 1;
+	else if (cub->direction == 'E')
+		cub->dir.y = 1;
+	else if (cub->direction == 'W')
+		cub->dir.y = -1;
 }
 
 void 	map_dfs(t_cub *cub, char **visited, int x, int y)
@@ -97,16 +111,72 @@ void 	map_dfs(t_cub *cub, char **visited, int x, int y)
 	if (y != 0 && (visited[x][y - 1] == '0' || visited[x][y - 1] == ' '))
 		map_dfs(cub, visited, x, y - 1);
 }
+int		is_sidewall(t_cub *cub, char **visited, int x, int y)
+{
+	int space;
+
+	space = 0;
+	if (y < cub->cols - 1 && visited[x][y + 1] == 'V')
+		space++;
+	if (y != 0 && visited[x][y - 1] == 'V')
+		space++;
+	if (x < cub->rows - 1 && visited[x + 1][y] == 'V')
+		space++;
+	if (x != 0 && visited[x - 1][y] == 'V')
+		space++;
+	return (space);
+}
+
+void	wall_dir(t_cub *cub, char **visited, int x, int y)
+{
+	int space;
+
+	space = is_sidewall(cub, visited, x, y);
+	if (x == 0 && visited[x][y] == '1')
+		visited[x][y] = 'N';
+	else if (x == cub->rows - 1 && visited[x][y] == '1')
+		visited[x][y] = 'S';
+	else if (y == 0 && visited[x][y] == '1')
+		visited[x][y] = 'E';
+	else if (y == cub->cols - 1 && visited[x][y] == '1')
+		visited[x][y] = 'W';
+	else if (space == 1 && x != 0 && visited[x - 1][y] == 'V')
+		visited[x][y] = 'S';
+	else if (space == 1 && x < cub->rows - 1 && visited[x + 1][y] == 'V')
+		visited[x][y] = 'N';
+	else if (space == 1 && y < cub->cols - 1 && visited[x][y + 1] == 'V')
+		visited[x][y] = 'W';
+	else if (space == 1 && y != 0 && visited[x][y - 1] == 'V')
+		visited[x][y] = 'E';
+}
+
+void 	wall_direction(t_cub *cub, char **visited)
+{
+	int i;
+	int j;
+
+	i = -1;
+	while (visited[++i] != NULL)
+	{
+		j = -1;
+		while (visited[i][++j] != '\0')
+			if (visited[i][j] == '1')
+			wall_dir(cub, visited, i, j);
+	}
+
+}
 
 int		map_validation(t_cub *cub)
 {
 	char **visited;
 
-	if (!(visited = ft_strdup_double(cub->map_buffer)))
-		return (-1);
 	if (!(find_player(cub)))
 		return (-1);
-	map_dfs(cub, visited, cub->player.pos_x, cub->player.pos_y);
+	if (!(visited = ft_strdup_double(cub->map_buffer)))
+		return (-1);
+	map_dfs(cub, visited, cub->player.x, cub->player.y);
+	print_double_ptr((visited));
+	double_ptr_mem_free(visited);
 	if (cub->invalid_map > 0)
 		return (-1);
 	return (1);
