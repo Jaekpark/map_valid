@@ -38,6 +38,21 @@
 # define X_EVENT_KEY_PRESS 2
 # define X_EVENT_KEY_RELEASE 3
 # define X_EVENT_KEY_EXIT 17
+
+# define KEY_W 13
+# define KEY_S 1
+# define KEY_D 2
+# define KEY_A 0
+# define KEY_ESC 53
+# define KEY_SP 49
+# define KEY_TAB 48
+# define KEY_UP 126
+# define KEY_DOWN 125
+# define KEY_RIGHT 124
+# define KEY_LEFT 123
+# define KEY_Q 12
+# define KEY_E 14
+
 typedef struct s_pos
 {
 	double	x;
@@ -51,8 +66,7 @@ typedef struct	s_img
 	int		size_l;
 	int		bpp;
 	int		endian;
-	int		img_width;
-	int		img_height;
+
 }				t_img;
 
 typedef struct s_node
@@ -95,23 +109,29 @@ typedef struct	s_cub
 	t_pos	player;
 	t_pos	dir;
 	t_list	*map;
+	t_tex	*base_path;
 	t_tex	*path;
 }				t_cub;
+
+typedef struct s_win
+{
+	t_img screen;
+	t_pos screen_size;
+	void *ptr;
+	void *win;
+}			t_win;
 
 typedef struct 	s_game
 {
 	t_cub *cub;
+	t_win *window;
 	t_pos player;
 	t_pos mv_ver;
 	t_pos mv_hor;
 	t_pos dir;
 	t_pos plane;
-	t_img img;
-	void	*mlx;
-	void	*win;
 	double mv_speed;
 	double rot_speed;
-	
 }	t_game;
 
 // list_to_buffer
@@ -174,19 +194,27 @@ int		print_error(int error);
 t_list	*init_list(t_list *list);
 t_cub	*init_cub(t_cub *cub);
 t_tex	*init_tex(t_tex *path);
+t_win	*init_window(t_cub *cub, t_win *window);
 t_game	*init_game(t_cub *cub, t_game *game);
+int		set_screen_size(t_cub *cub, t_pos *screen_size);
 
 // parsing
 int		parsing_path(t_cub *cub, char *line, int index);
 int		parsing_color(t_cub *cub, char *line, int index);
 int		parsing_resolution(t_cub *cub, char *line);
 int		parsing_map(t_cub *cub, char *line);
+int		check_resolution (char *line);
+int		check_color_space(char *line);
+int		check_color_char(char *line);
+int		make_color(char **color);
 
 // clear
 void	clear_map(t_list *map);
 void	clear_path(t_tex *path);
 void	clear_cub(t_cub *cub);
 void	clear_map_buffer(char **map_buffer);
+void	clear_window(t_win *window);
+void	clear_game(t_game *game);
 
 
 // lst

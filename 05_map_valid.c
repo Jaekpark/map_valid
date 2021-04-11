@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 11:35:54 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/11 16:43:10 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/11 19:12:39 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,6 @@ int		map_validation(t_cub *cub)
 	if (!(visited = ft_strdup_double(cub->map_buffer)))
 		return (-1);
 	map_dfs(cub, visited, cub->player.x, cub->player.y);
-	print_double_ptr((visited));
 	double_ptr_mem_free(visited);
 	if (cub->invalid_map > 0)
 		return (-1);

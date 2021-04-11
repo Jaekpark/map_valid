@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 18:03:47 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/09 11:30:35 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/11 18:03:54 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,19 @@ int parsing_path(t_cub *cub, char *line, int index)
 	else if (index == CEIL_TEX)
 		cub->path->ceil = ft_strdup(path[1]);
 	double_ptr_mem_free(path);
+	return (1);
+}
+
+int	check_resolution(char *line)
+{
+	int i;
+
+	i = -1;
+	while (line[++i] != '\0')
+	{
+		if (line[i] != ' ' || !ft_isnum(line[i]))
+			return (-1);
+	}
 	return (1);
 }
 
@@ -135,6 +148,8 @@ int parsing_resolution(t_cub *cub, char *line)
 	char **display_size;
 
 	i = 0;
+	if (!(check_resolution(line + 1)))
+	 return (-1);
 	display_size = ft_split(line, ' ');
 	while (display_size[i])
 		i++;

@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:50 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/06 17:03:01 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/11 19:09:12 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,6 @@ void print_node(t_list *list)
 		printf("%s\n", temp->line);
 		temp = temp->next;
 	}
-}
-
-void	print_cub(t_cub *cub)
-{
-	printf("width = %d\n", cub->width);
-	printf("height = %d\n", cub->height);
-	printf("map size = %d\n", ft_lstsize(cub->map));
-	printf("floor color = %d\n", cub->floor_color);
-	printf("ceiling color = %d\n", cub->ceiling_color);
-	printf("north : %s\n", cub->path->north);
-	printf("south : %s\n", cub->path->south);
-	printf("east : %s\n", cub->path->east);
-	printf("west : %s\n", cub->path->west);
-	printf("sprite : %s\n", cub->path->sprite);
-	printf("floor tex : %s\n", cub->path->floor);
-	printf("ceiling tex : %s\n", cub->path->ceil);
-	printf("map\n");
-	print_node(cub->map);
-
 }
 
 int		parse_line(t_cub *cub, char *line, int eof)
@@ -75,9 +56,7 @@ int		read_cub(char **argv, t_cub *cub)
 
 	ret = 0;
 	eof = 1;
-	if (argv[1])
-		ret = 0;
-	if ((fd = open("1.cub", O_RDONLY)) < 0)
+	if ((fd = open(argv[1], O_RDONLY)) < 0)
 		return (print_error(OPEN_ERR));
 	while ((eof = get_next_line(fd, &line)) >= 0)
 	{

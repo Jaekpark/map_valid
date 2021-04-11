@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:31:09 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/05 12:51:30 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/11 18:52:43 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	clear_path(t_tex *path)
 	if (path->ceil != NULL)
 		free(path->ceil);
 	free(path);
+	path = NULL;
 }
 
 void	clear_map_buffer(char **map_buffer)
@@ -68,9 +69,11 @@ void	clear_map_buffer(char **map_buffer)
 	while (map_buffer[i] != NULL)
 	{
 		free(map_buffer[i]);
+		map_buffer[i] = NULL;
 		i++;
 	}
 	free(map_buffer);
+	map_buffer = NULL;
 }
 
 void	clear_cub(t_cub *cub)
@@ -79,10 +82,33 @@ void	clear_cub(t_cub *cub)
 		return ;
 	if (cub->path != NULL)
 		clear_path(cub->path);
+	if (cub->base_path != NULL)
+		clear_path(cub->base_path);
 	cub->path = NULL;
 	if (cub->map != NULL)
 		clear_map(cub->map);
 	clear_map_buffer(cub->map_buffer);
 	cub->map = NULL;
 	free(cub);
+	cub = NULL;
+}
+
+void	clear_window(t_win *window)
+{
+	if (window->screen.img)
+		mlx_destroy_image(window->ptr, window->screen.img);
+	if (window->ptr && window->win)
+		mlx_destroy_window(window->ptr, window->win);
+	free(window);
+	window = NULL;
+}
+
+void	clear_game(t_game *game)
+{
+	if (!game)
+		return ;
+	if (game->cub != NULL)
+		clear_cub(game->cub);
+	if (game->window != NULL)
+		clear_window(game->window);
 }
