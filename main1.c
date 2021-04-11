@@ -2,29 +2,30 @@
 
 int main(int argc, char **argv)
 {
-	int i;
-	int fx;
-	int fy;
+	int fd;
 	int ret;
 	t_cub *cub;
 	t_game *game;
 
-	i = 0;
-	fx = 0;
-	fy = 0;
+	fd = 0;
+	ret = 0;
 	cub = NULL;
 	game = NULL;
-	if (argc <= 1)
-		printf("\n");
 	cub = init_cub(cub);
-	ret = check_argv(argc, argv, cub);
-	printf("ret = %d\n", ret);
+	fd = check_argv(argc, argv, cub);
+	printf("fd = %d\n", fd);
 	printf("save_opt = %d\n", cub->save_opt);
-	if (ret != -1)
+	if (fd <= 3)
 	{
-		ret = read_cub(argv, cub);
-		ret = map_validation(cub);
-		game = init_game(cub, game);
+		ret = read_cub(cub, fd);
+		printf("read_Cub after ret = %d\n", ret);
+		if (ret != -1)
+		{
+			ret = map_validation(cub);
+			game = init_game(cub, game);
+			printf("%f %f\n", game->window->screen_size.x, game->window->screen_size.y);
+			load_texture(game);
+		}
 	}
 	//printf("cub width height = %d %d\n", cub->width, cub->height);
 	//printf(" screen size %f %f\n", game->window->screen_size.x, game->window->screen_size.y);

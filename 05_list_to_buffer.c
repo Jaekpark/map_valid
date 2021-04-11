@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 11:37:52 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/05 13:30:43 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/11 23:02:33 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,18 +69,19 @@ void	set_map_buffer(t_cub *cub)
 	}
 }
 
-void		list_to_buffer(t_cub *cub)
+int		list_to_buffer(t_cub *cub)
 {
 	int		i;
 	int		size;
 	char	**temp;
 	t_node	*map_temp;
-
+	
+	if (!(map_temp = cub->map->head))
+		return (-1);
 	i = 0;
 	size = ft_lstsize(cub->map);
-	map_temp = cub->map->head;
 	if (!(temp = malloc(sizeof(char *) * (size + 1))))
-		return ;
+		return (-1);
 	while (map_temp != NULL)
 	{
 		temp[i++] = ft_strdup(map_temp->line);
@@ -91,4 +92,5 @@ void		list_to_buffer(t_cub *cub)
 	cub->cols = set_base_width(cub->map_buffer);
 	cub->rows = size;
 	set_map_buffer(cub);
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:53 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/11 18:51:42 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/12 01:14:07 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,14 @@ t_tex	*init_base_tex(t_tex *path)
 	path->floor = ft_strdup("./textures/wood.xpm");
 	path->ceil = ft_strdup("./textures/greystone.xpm");
 	return (path);
+}
+
+void	set_pos(t_pos *pos, double x, double y)
+{
+	if (!pos)
+		return ;
+	pos->x = x;
+	pos->y = y;
 }
 
 t_cub	*init_cub(t_cub *cub)
@@ -109,10 +117,46 @@ t_win 	*init_win(t_cub *cub, t_win *window)
 	if (!(set_screen_size(cub, &window->screen_size)))
 		return (NULL);
 	window->ptr = mlx_init();
-	window->win = mlx_new_window(window->ptr, window->screen_size.x, window->screen_size.y, "cub3D");
-	window->screen.img = mlx_new_image(window->ptr, window->screen_size.x, window->screen_size.y);
+	window->win = mlx_new_window(window->ptr, (int)window->screen_size.x, (int)window->screen_size.y, "cub3D");
+	window->screen.img = mlx_new_image(window->ptr, (int)window->screen_size.x, (int)window->screen_size.y);
 	window->screen.data = (int *)mlx_get_data_addr(window->screen.img, &window->screen.bpp, &window->screen.size_l, &window->screen.endian);
 	return (window);
+}
+
+int		**clear_texture(int **texture)
+{
+	int i;
+
+	i = -1;
+	while (texture[++i] != NULL)
+		free(texture[i]);
+	free(texture);
+	texture = NULL;
+	return (NULL);
+}
+
+int		**init_texture(int **texture, int width, int height, int count)
+{
+	int i;
+	int j;
+
+	if (!(texture = malloc(sizeof(int *) * (count))))
+		return (NULL);
+	i = -1;
+	while (++i < count)
+		if (!(texture[i] = malloc(sizeof(int) * (width * height))))
+			return (clear_texture(texture));
+	i = -1;
+	while (++i < count)
+	{
+		j = 0;
+		while (j < width * height)
+		{
+			texture[i][j] = 0;
+			j++;
+		}
+	}
+	return (texture);
 }
 
 t_game 	*init_game(t_cub *cub, t_game *game)
@@ -124,17 +168,15 @@ t_game 	*init_game(t_cub *cub, t_game *game)
 		clear_window(game->window);
 		return (NULL);
 	}
+	game->tex_height = 64;
+	game->tex_width = 64;
+	game->texture = init_texture(game->texture, game->tex_height, game->tex_width, 7);
 	game->mv_speed = 0.05;
 	game->rot_speed = 0.05;
-	game->mv_hor.x = 0;
-	game->mv_hor.y = 0;
-	game->mv_ver.x = 0;
-	game->mv_ver.y = 0;
-	game->plane.x = 0;
-	game->plane.y = 0.66;
-	game->player.x = cub->player.x;
-	game->player.y = cub->player.y;
-	game->dir.x = cub->dir.x;
-	game->dir.y = cub->dir.y;
+	set_pos(&game->mv_hor, 0, 0);
+	set_pos(&game->mv_ver, 0, 0);
+	set_pos(&game->plane, 0, 0.66);
+	set_pos(&game->player, cub->player.x, cub->player.y);
+	set_pos(&game->dir, cub->dir.x, cub->dir.y);
 	return (game);
 }

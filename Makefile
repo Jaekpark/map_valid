@@ -1,8 +1,9 @@
 SRCS			=	./00_check.c ./00_error.c ./01_read.c \
 					./02_init.c ./03_parsing.c ./04_clear.c \
+					./05_list_to_buffer.c ./05_map_valid.c ./06_texture.c \
 					./utils/ft_atoi.c ./utils/ft_gnl.c ./utils/ft_lstsize.c \
 					./utils/ft_utils_is.c ./utils/ft_utils_str.c ./main1.c \
-					./utils/ft_split.c ./05_list_to_buffer.c ./05_map_valid.c
+					./utils/ft_split.c 
 OBJS			= $(SRCS:.c=.o)
 
 CC				= gcc

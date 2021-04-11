@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 18:03:47 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/11 18:03:54 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/12 00:52:17 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int parsing_path(t_cub *cub, char *line, int index)
 {
 	char **path;
 
+	if ((check_file_extension(line, TEX_EXTENSION)) != 0)
+		return (-1);
 	path = ft_split(line, ' ');
 	if (!path)
 		return (-1);

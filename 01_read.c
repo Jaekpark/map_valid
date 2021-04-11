@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:50 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/11 19:09:12 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/12 00:52:50 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void print_node(t_list *list)
 	t_node *temp;
 
 	temp = list->head;
+	if (temp == NULL)
+		printf("NULL\n");
 	while (temp != NULL)
 	{
 		printf("%s\n", temp->line);
@@ -47,17 +49,14 @@ int		parse_line(t_cub *cub, char *line, int eof)
 	return (ret);
 }
 
-int		read_cub(char **argv, t_cub *cub)
+int		read_cub(t_cub *cub, int fd)
 {
-	int		fd;
 	int 	eof;
 	int 	ret;
 	char	*line;
 
 	ret = 0;
 	eof = 1;
-	if ((fd = open(argv[1], O_RDONLY)) < 0)
-		return (print_error(OPEN_ERR));
 	while ((eof = get_next_line(fd, &line)) >= 0)
 	{
 		if (cub->is_map == 1 && line[0] == 0)
@@ -67,7 +66,8 @@ int		read_cub(char **argv, t_cub *cub)
 		if (ret < 0 || eof <= 0)
 			break;
 	}
-	list_to_buffer(cub);
 	close(fd);
+	if (ret != -1 && eof == 0)
+		ret = list_to_buffer(cub);
 	return (ret);
 }

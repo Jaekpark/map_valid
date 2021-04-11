@@ -8,6 +8,7 @@
 #include "./mlx/mlx.h"
 
 # define MAP_EXTENSION ".cub"
+# define TEX_EXTENSION ".xpm"
 # define VALID_CHAR " 012NSEW"
 # define SAVE "--save"
 # define DIRECTION "NSEW"
@@ -21,6 +22,8 @@
 # define PARSING_ERR 103
 # define OPEN_ERR 104
 # define COLOR_ERR 105
+# define NO_PLAYER 106
+# define NOT_SURROUNDED 107
 
 # define NORTH_TEX 0
 # define SOUTH_TEX 1
@@ -130,12 +133,20 @@ typedef struct 	s_game
 	t_pos mv_hor;
 	t_pos dir;
 	t_pos plane;
+	int	**texture;
+	int tex_width;
+	int tex_height;
 	double mv_speed;
 	double rot_speed;
 }	t_game;
 
+
+// load_texture
+void	load_texture(t_game *game);
+void	load_img(t_game *game, int *texture, char *path, t_img *img);
+
 // list_to_buffer
-void	list_to_buffer(t_cub *cub);
+int		list_to_buffer(t_cub *cub);
 char	*make_blank(int count);
 int		set_base_width(char **map_buffer);
 void	set_map_buffer(t_cub *cub);
@@ -152,7 +163,7 @@ void	set_player_dir(t_cub *cub);
 // read
 void	print_node(t_list *list);
 void	print_cub(t_cub *cub);
-int		read_cub(char **argv, t_cub *cub);
+int		read_cub(t_cub *cub, int fd);
 int		parse_line(t_cub *cub, char *line, int eof);
 
 // ft_is~
@@ -185,6 +196,7 @@ void	double_ptr_mem_free(char **str);
 int		check_file_name(const char *file_name);
 int		check_option(const char *option);
 int		check_identifier(char *line);
+int		check_file_extension(char *file, char *extension);
 int		check_argv(int argc, char **argv, t_cub *cub);
 
 // error

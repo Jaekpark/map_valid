@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 18:17:15 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/11 19:23:29 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/12 01:14:36 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int		check_file_name(const char *file_name)
 {
 	int pos;
 
+	pos = 0;
 	if (!file_name)
 		return (-1);
 	if (ft_strlen((char *)file_name) < 5)
@@ -26,19 +27,19 @@ int		check_file_name(const char *file_name)
 	return (ft_strcmp((char *)file_name, MAP_EXTENSION));
 }
 
-int		check_path_extension(char *path, char *extension)
+int		check_file_extension(char *file, char *extension)
 {
 	int pos;
 
 	pos = 0;
-	if (!path || !extension)
+	if (!file || !extension)
 		return (-1);
-	if (ft_strlen(path) <= ft_strlen(extension))
+	if (ft_strlen(file) <= ft_strlen(extension))
 		return (-1);
-	pos = ft_strlen(path) - ft_strlen(extension);
+	pos = ft_strlen(file) - ft_strlen(extension);
 	while (pos--)
-		path++;
-	return (ft_strcmp(path, extension));
+		file++;
+	return (ft_strcmp(file, extension));
 }
 
 int		check_option(const char *option)
@@ -92,7 +93,7 @@ int		check_argv(int argc, char **argv, t_cub *cub)
 		if (check_file_name(argv[1]) != 0)
 			return (print_error(WRONG_NAME));
 		if ((fd = open(argv[1], O_RDONLY)) < 0)
-			return (print_error(WRONG_NAME));
+			return (print_error(OPEN_ERR));
 		if (argc >= 3)
 		{
 			if (check_option(argv[2]) != 0)
