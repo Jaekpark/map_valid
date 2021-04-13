@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <math.h>
 #include "./mlx/mlx.h"
 
 # define MAP_EXTENSION ".cub"
@@ -24,6 +25,7 @@
 # define COLOR_ERR 105
 # define NO_PLAYER 106
 # define NOT_SURROUNDED 107
+# define NO_TEX 108
 
 # define NORTH_TEX 0
 # define SOUTH_TEX 1
@@ -85,7 +87,7 @@ typedef struct s_list
 	struct s_node *tail;
 }	t_list;
 
-typedef struct s_tex
+typedef struct s_path
 {
 	char	*north;
 	char	*south;
@@ -94,7 +96,46 @@ typedef struct s_tex
 	char	*sprite;
 	char	*floor;
 	char	*ceil;
-}	t_tex;
+}	t_path;
+
+typedef struct s_floor
+{
+	double half;
+	double row_dist;
+	int pos_y;
+	int tex_x;
+	int tex_y;
+	int ce_x;
+	int ce_y;
+	t_pos fl;
+	t_pos step;
+	t_pos ray_dir_l;
+	t_pos ray_dir_r;
+}	t_floor;
+
+typedef struct s_raycast
+{
+	double camera_x;
+	double perp_wall_dist;
+	int hit;
+	int side;
+	int	line_height;
+	int draw_start;
+	int draw_end;
+	int	map_x;
+	int map_y;
+	int step_x;
+	int step_y;
+	int tex_idx;
+	double wall_x;
+	int tex_x;
+	int tex_y;
+	double step;
+	double tex_pos;
+	t_pos ray_dir;
+	t_pos side_dist;
+	t_pos delta_dist;
+}		t_raycast;
 
 typedef struct	s_cub
 {
@@ -112,8 +153,8 @@ typedef struct	s_cub
 	t_pos	player;
 	t_pos	dir;
 	t_list	*map;
-	t_tex	*base_path;
-	t_tex	*path;
+	t_path	*base_path;
+	t_path	*path;
 }				t_cub;
 
 typedef struct s_win
@@ -124,26 +165,61 @@ typedef struct s_win
 	void *win;
 }			t_win;
 
+typedef struct s_tex
+{
+	void	*img;
+	int		*data;
+	int		bpp;
+	int		size_l;
+	int		endian;
+	int		width;
+	int		height;
+}			t_tex;
+
+typedef struct s_key
+{
+	int w;
+	int s;
+	int a;
+	int d;
+	int esc;
+}	t_key;
+
 typedef struct 	s_game
 {
 	t_cub *cub;
 	t_win *window;
-	t_pos player;
-	t_pos mv_ver;
-	t_pos mv_hor;
+	t_tex texture[7];
+	t_key key;
+	t_pos player;;
 	t_pos dir;
 	t_pos plane;
-	int	**texture;
-	int tex_width;
-	int tex_height;
+	t_raycast raycast;
+	t_floor floor;
+	int	buf[720][1280];
 	double mv_speed;
 	double rot_speed;
 }	t_game;
 
 
+// print
+void print_cub(t_cub *cub);
+void print_path(t_path *path);
+void print_game(t_game *game);
+
+//ray_cast
+int		main_loop(t_game *game);
+
+// key
+int		key_release(int key, t_game *game);
+int		key_press(int key, t_game *game);
+void	key_update(t_game *game);
+void	rot_right_left(t_game *game);
+void	mv_forward_back(t_game *game, char **map_buffer);
+
 // load_texture
 void	load_texture(t_game *game);
-void	load_img(t_game *game, int *texture, char *path, t_img *img);
+void	load_img(t_game *game, t_tex *texture, char *path);
 
 // list_to_buffer
 int		list_to_buffer(t_cub *cub);
@@ -158,7 +234,7 @@ int		map_rows(char **map);
 int		map_validation(t_cub *cub);
 char	**ft_strdup_double(char **s);
 void	print_double_ptr(char **s);
-void	set_player_dir(t_cub *cub);
+void	set_player_dir(t_game *game, t_cub *cub);
 
 // read
 void	print_node(t_list *list);
@@ -205,10 +281,13 @@ int		print_error(int error);
 // init
 t_list	*init_list(t_list *list);
 t_cub	*init_cub(t_cub *cub);
-t_tex	*init_tex(t_tex *path);
+t_path	*init_tex(t_path *path);
 t_win	*init_window(t_cub *cub, t_win *window);
 t_game	*init_game(t_cub *cub, t_game *game);
 int		set_screen_size(t_cub *cub, t_pos *screen_size);
+void	set_pos(t_pos *pos, double x, double y);
+void	init_raycast(t_raycast *raycast);
+void	init_floor(t_floor *floor);
 
 // parsing
 int		parsing_path(t_cub *cub, char *line, int index);
@@ -222,7 +301,7 @@ int		make_color(char **color);
 
 // clear
 void	clear_map(t_list *map);
-void	clear_path(t_tex *path);
+void	clear_path(t_path *path);
 void	clear_cub(t_cub *cub);
 void	clear_map_buffer(char **map_buffer);
 void	clear_window(t_win *window);

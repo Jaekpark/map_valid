@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:31:09 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/11 23:36:30 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/12 15:53:06 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	clear_map(t_list *map)
 	map = NULL;
 }
 
-void	clear_path(t_tex *path)
+void	clear_path(t_path *path)
 {
 	if (!path)
 		return ;
@@ -113,4 +113,5 @@ void	clear_game(t_game *game)
 	if (game->window != NULL)
 		clear_window(game->window);
 	free(game);
+	game = NULL;
 }

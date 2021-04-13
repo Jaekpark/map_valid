@@ -6,11 +6,59 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:50 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/12 00:52:50 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/13 16:23:54 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void print_game(t_game *game)
+{
+	printf("========== t_game ===========\n");
+	printf("|player x, y = %f, %f|\n", game->player.x, game->player.y);
+	printf("|plane  x, y = %f, %f|\n", game->plane.x, game->plane.y);
+	printf("|game dir x, y = %f, %f|\n", game->dir.x, game->dir.y);
+	printf("|mv_speed, rot_speed = %f, %f|\n", game->mv_speed, game->rot_speed);
+	printf("|screen size = %f, %f|\n", game->window->screen_size.x, game->window->screen_size.y);
+	printf("|texture[0] height, width bpp = %d, %d, %d|\n", game->texture[0].height, game->texture[0].width, game->texture[0].bpp);
+	printf("---------t_game end----------\n");
+}
+
+void print_path(t_path *path)
+{
+	printf("north = %s\n", path->north);
+	printf("soutn = %s\n", path->south);
+	printf("east = %s\n", path->east);
+	printf("east = %s\n", path->west);
+	printf("sprite = %s\n", path->sprite);
+	printf("floor = %s\n", path->floor);
+	printf("ceil = %s\n", path->ceil);
+}
+
+void print_cub(t_cub *cub)
+{
+	printf("=================t_cub===============\n");
+	printf("direction = %c\n", cub->direction);
+	printf("width, height = %d, %d\n", cub->width, cub->height);
+	printf("cols rows = %d, %d\n", cub->cols, cub->rows);
+	printf("save opt = %d\n", cub->save_opt);
+	printf("floor color = %d, ceil color = %d\n", cub->floor_color, cub->ceiling_color);
+	printf("invalid map = %d\n", cub->invalid_map);
+	printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+	printf("map buffer\n");
+	print_double_ptr(cub->map_buffer);
+	printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+	printf("map _list\n");
+	print_node(cub->map);
+	printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
+	printf("player pos x, y = %f, %f\n", cub->player.x, cub->player.y);
+	printf("direction vector = %f, %f\n", cub->dir.x, cub->dir.y);
+	printf("+++++base_path++++++\n");
+	print_path(cub->base_path);
+	printf("+++++  path  +++++++\n");
+	print_path(cub->path);
+	printf("---------------- t_cub end -------------\n");
+}
 
 void print_node(t_list *list)
 {
@@ -57,6 +105,8 @@ int		read_cub(t_cub *cub, int fd)
 
 	ret = 0;
 	eof = 1;
+	if (!cub || fd < 3)
+		return (-1);
 	while ((eof = get_next_line(fd, &line)) >= 0)
 	{
 		if (cub->is_map == 1 && line[0] == 0)

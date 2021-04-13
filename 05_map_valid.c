@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 11:35:54 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/11 22:32:13 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/13 19:32:53 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,16 +81,32 @@ int		find_player(t_cub *cub)
 	return (-1);
 }
 
-void	set_player_dir(t_cub *cub)
+void	set_player_dir(t_game *game, t_cub *cub)
 {
 	if (cub->direction == 'N')
-		cub->dir.x = -1;
+	{
+		set_pos(&cub->dir, -1, 0);
+		set_pos(&game->dir, -1, 0);
+		set_pos(&game->plane, 0, 0.66);
+	}
 	else if (cub->direction == 'S')
-		cub->dir.x = 1;
+	{
+		set_pos(&cub->dir, 1, 0);
+		set_pos(&game->dir, 1, 0);
+		set_pos(&game->plane, 0, -0.66);
+	}	
 	else if (cub->direction == 'E')
-		cub->dir.y = 1;
+	{
+		set_pos(&cub->dir, 0, 1);
+		set_pos(&game->dir, 0, 1);
+		set_pos(&game->plane, 0.66, 0);
+	}
 	else if (cub->direction == 'W')
-		cub->dir.y = -1;
+	{
+		set_pos(&cub->dir, 0, -1);
+		set_pos(&cub->dir, 0, -1);
+		set_pos(&game->plane, -0.66, 0);
+	}
 }
 
 void 	map_dfs(t_cub *cub, char **visited, int x, int y)

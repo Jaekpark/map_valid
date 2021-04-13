@@ -6,11 +6,29 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 18:17:15 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/12 01:14:36 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/12 16:17:05 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void		fix_texture_path(t_path *path, t_path *base_path)
+{
+	if (path->north == NULL)
+		path->north = ft_strdup(base_path->north);
+	if (path->south == NULL)
+		path->south = ft_strdup(base_path->south);
+	if (path->east == NULL)
+		path->east = ft_strdup(base_path->east);
+	if (path->west == NULL)
+		path->west = ft_strdup(base_path->west);
+	if (path->sprite == NULL)
+		path->sprite = ft_strdup(base_path->sprite);
+	if (path->floor == NULL)
+		path->floor = ft_strdup(base_path->floor);
+	if (path->ceil == NULL)
+		path->ceil = ft_strdup(base_path->ceil);
+}
 
 int		check_file_name(const char *file_name)
 {

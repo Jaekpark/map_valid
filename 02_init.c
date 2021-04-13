@@ -6,11 +6,20 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:53 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/12 01:14:07 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/13 19:31:25 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	init_key(t_key *key)
+{
+	key->a = 0;
+	key->w = 0;
+	key->esc = 0;
+	key->s = 0;
+	key->d = 0;
+}
 
 t_list	*init_list(t_list *list)
 {
@@ -22,9 +31,9 @@ t_list	*init_list(t_list *list)
 	return (list);
 }
 
-t_tex	*init_tex(t_tex *path)
+t_path	*init_tex(t_path *path)
 {
-	if (!(path = malloc(sizeof(t_tex))))
+	if (!(path = malloc(sizeof(t_path))))
 		return (NULL);
 	path->north = NULL;
 	path->south = NULL;
@@ -36,17 +45,17 @@ t_tex	*init_tex(t_tex *path)
 	return (path);
 }
 
-t_tex	*init_base_tex(t_tex *path)
+t_path	*init_base_tex(t_path *path)
 {
-	if (!(path = malloc(sizeof(t_tex))))
+	if (!(path = malloc(sizeof(t_path))))
 		return (NULL);
-	path->north = ft_strdup("./textures/bluestone.xpm");
-	path->south = ft_strdup("./textures/redbrick.xpm");
-	path->east = ft_strdup("./textures/purplestone.xpm");
-	path->west = ft_strdup("./textures/colorstone.xpm");
-	path->sprite = ft_strdup("./textures/barrel.xpm");
-	path->floor = ft_strdup("./textures/wood.xpm");
-	path->ceil = ft_strdup("./textures/greystone.xpm");
+	path->north = ft_strdup("./textures/north.xpm");
+	path->south = ft_strdup("./textures/south.xpm");
+	path->east = ft_strdup("./textures/east.xpm");
+	path->west = ft_strdup("./textures/west.xpm");
+	path->sprite = ft_strdup("./textures/sprite.xpm");
+	path->floor = ft_strdup("./textures/floor.xpm");
+	path->ceil = ft_strdup("./textures/ceil.xpm");
 	return (path);
 }
 
@@ -123,42 +132,6 @@ t_win 	*init_win(t_cub *cub, t_win *window)
 	return (window);
 }
 
-int		**clear_texture(int **texture)
-{
-	int i;
-
-	i = -1;
-	while (texture[++i] != NULL)
-		free(texture[i]);
-	free(texture);
-	texture = NULL;
-	return (NULL);
-}
-
-int		**init_texture(int **texture, int width, int height, int count)
-{
-	int i;
-	int j;
-
-	if (!(texture = malloc(sizeof(int *) * (count))))
-		return (NULL);
-	i = -1;
-	while (++i < count)
-		if (!(texture[i] = malloc(sizeof(int) * (width * height))))
-			return (clear_texture(texture));
-	i = -1;
-	while (++i < count)
-	{
-		j = 0;
-		while (j < width * height)
-		{
-			texture[i][j] = 0;
-			j++;
-		}
-	}
-	return (texture);
-}
-
 t_game 	*init_game(t_cub *cub, t_game *game)
 {
 	if (!(game = malloc(sizeof(t_game))))
@@ -168,14 +141,11 @@ t_game 	*init_game(t_cub *cub, t_game *game)
 		clear_window(game->window);
 		return (NULL);
 	}
-	game->tex_height = 64;
-	game->tex_width = 64;
-	game->texture = init_texture(game->texture, game->tex_height, game->tex_width, 7);
-	game->mv_speed = 0.05;
-	game->rot_speed = 0.05;
-	set_pos(&game->mv_hor, 0, 0);
-	set_pos(&game->mv_ver, 0, 0);
-	set_pos(&game->plane, 0, 0.66);
+	game->mv_speed = 0.1;
+	game->rot_speed = 0.1;
+	game->cub = cub;
+	init_key(&game->key);
+	set_pos(&game->plane, 0, 0);
 	set_pos(&game->player, cub->player.x, cub->player.y);
 	set_pos(&game->dir, cub->dir.x, cub->dir.y);
 	return (game);

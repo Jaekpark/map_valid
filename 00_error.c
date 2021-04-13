@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:29:48 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/11 22:33:07 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/12 16:02:59 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,7 @@ int		print_error(int error)
 		printf("Error : Can't open file. Please check your file name or directory.\n");
 	else if (error == NOT_SURROUNDED)
 		printf("Error : Invalid map. Map isn't surrounded by walls.\n");
+	else if (error == NO_TEX)
+		printf("Error : Texture file does not exists.\n");
 	return (-1);
 }
