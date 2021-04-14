@@ -23,11 +23,13 @@ int main(int argc, char **argv)
 		if (ret != -1)
 		{
 			ret = map_validation(cub);
+			printf("after map_valid ret = %d\n", ret);
 			game = init_game(cub, game);
 			set_player_dir(game, cub);
 			init_raycast(&game->raycast);
 			init_floor(&game->floor);
 			load_texture(game);
+			init_sprite(&game->sprite);
 			print_cub(cub);
 			print_game(game);
 		}

@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:50 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/13 16:23:54 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/14 16:48:08 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void print_game(t_game *game)
 	printf("|plane  x, y = %f, %f|\n", game->plane.x, game->plane.y);
 	printf("|game dir x, y = %f, %f|\n", game->dir.x, game->dir.y);
 	printf("|mv_speed, rot_speed = %f, %f|\n", game->mv_speed, game->rot_speed);
+	printf("|sprite x,y = %f, %f\n", game->sprite.sp.x, game->sprite.sp.y);
 	printf("|screen size = %f, %f|\n", game->window->screen_size.x, game->window->screen_size.y);
 	printf("|texture[0] height, width bpp = %d, %d, %d|\n", game->texture[0].height, game->texture[0].width, game->texture[0].bpp);
 	printf("---------t_game end----------\n");
@@ -42,6 +43,7 @@ void print_cub(t_cub *cub)
 	printf("width, height = %d, %d\n", cub->width, cub->height);
 	printf("cols rows = %d, %d\n", cub->cols, cub->rows);
 	printf("save opt = %d\n", cub->save_opt);
+	printf("sprtie x,y = %f, %f\n", cub->sprite.x, cub->sprite.y);
 	printf("floor color = %d, ceil color = %d\n", cub->floor_color, cub->ceiling_color);
 	printf("invalid map = %d\n", cub->invalid_map);
 	printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
@@ -52,7 +54,6 @@ void print_cub(t_cub *cub)
 	print_node(cub->map);
 	printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 	printf("player pos x, y = %f, %f\n", cub->player.x, cub->player.y);
-	printf("direction vector = %f, %f\n", cub->dir.x, cub->dir.y);
 	printf("+++++base_path++++++\n");
 	print_path(cub->base_path);
 	printf("+++++  path  +++++++\n");

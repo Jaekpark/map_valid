@@ -26,6 +26,7 @@
 # define NO_PLAYER 106
 # define NOT_SURROUNDED 107
 # define NO_TEX 108
+# define TOO_MANY_SP 109
 
 # define NORTH_TEX 0
 # define SOUTH_TEX 1
@@ -137,26 +138,6 @@ typedef struct s_raycast
 	t_pos delta_dist;
 }		t_raycast;
 
-typedef struct	s_cub
-{
-	char	direction;
-	int is_map;
-	int width;
-	int height;
-	int cols;
-	int rows;
-	int	save_opt;
-	int floor_color;
-	int ceiling_color;
-	int	invalid_map;
-	char **map_buffer;
-	t_pos	player;
-	t_pos	dir;
-	t_list	*map;
-	t_path	*base_path;
-	t_path	*path;
-}				t_cub;
-
 typedef struct s_win
 {
 	t_img screen;
@@ -185,6 +166,48 @@ typedef struct s_key
 	int esc;
 }	t_key;
 
+typedef struct s_sprite
+{
+	t_pos ray;
+	t_pos sp;
+	t_pos trans;
+	double v_mv;
+	int u_div;
+	int v_div;
+	int v_mv_screen;
+	int sp_width;
+	int sp_height;
+	int	screen_x;
+	int start_x;
+	int start_y;
+	int end_x;
+	int end_y;
+	int tex_x;
+	int tex_y;
+	double inv;
+	
+}	t_sprite;
+
+
+typedef struct	s_cub
+{
+	char	direction;
+	int is_map;
+	int width;
+	int height;
+	int cols;
+	int rows;
+	int	save_opt;
+	int floor_color;
+	int ceiling_color;
+	int	invalid_map;
+	char **map_buffer;
+	t_pos	player;
+	t_pos	sprite;
+	t_list	*map;
+	t_path	*base_path;
+	t_path	*path;
+}	t_cub;
 typedef struct 	s_game
 {
 	t_cub *cub;
@@ -196,7 +219,11 @@ typedef struct 	s_game
 	t_pos plane;
 	t_raycast raycast;
 	t_floor floor;
-	int	buf[720][1280];
+	t_sprite sprite;
+	int width;
+	int height;
+	double *z_buf;
+	int	**buf;
 	double mv_speed;
 	double rot_speed;
 }	t_game;
@@ -288,6 +315,7 @@ int		set_screen_size(t_cub *cub, t_pos *screen_size);
 void	set_pos(t_pos *pos, double x, double y);
 void	init_raycast(t_raycast *raycast);
 void	init_floor(t_floor *floor);
+void	init_sprite(t_sprite *sprite);
 
 // parsing
 int		parsing_path(t_cub *cub, char *line, int index);
@@ -306,6 +334,7 @@ void	clear_cub(t_cub *cub);
 void	clear_map_buffer(char **map_buffer);
 void	clear_window(t_win *window);
 void	clear_game(t_game *game);
+void	clear_buf(t_game *game);
 
 
 // lst

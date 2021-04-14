@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 11:35:54 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/13 19:32:53 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/14 17:53:40 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,37 @@ char	**ft_strdup_double(char **s)
 	return (ret);
 }
 
+int		find_sprite(t_cub *cub)
+{
+	int x;
+	int y;
+	int	find;
+
+	x = 0;
+	find = 0;
+	while(cub->map_buffer[x] != NULL)
+	{
+		y = 0;
+		while (cub->map_buffer[x][y] != '\0')
+		{
+			if (cub->map_buffer[x][y] == '2')
+			{
+				if (find == 0)
+				{
+					cub->sprite.x = x + 0.5;
+					cub->sprite.y = y + 0.5;
+					find = 1;
+				}
+				else if (find == 1)
+					return (-1);
+			}
+			y++;
+		}
+		x++;
+	}
+	return (1);	
+}
+
 int		find_player(t_cub *cub)
 {
 	int x;
@@ -69,6 +100,7 @@ int		find_player(t_cub *cub)
 					cub->player.x = x;
 					cub->player.y = y;
 					cub->direction = cub->map_buffer[x][y];
+					cub->map_buffer[x][y] = '0';
 					find = 1;
 				}
 				else if (find == 1)
@@ -78,33 +110,29 @@ int		find_player(t_cub *cub)
 		}
 		x++;
 	}
-	return (-1);
+	return (1);
 }
 
 void	set_player_dir(t_game *game, t_cub *cub)
 {
 	if (cub->direction == 'N')
 	{
-		set_pos(&cub->dir, -1, 0);
 		set_pos(&game->dir, -1, 0);
 		set_pos(&game->plane, 0, 0.66);
 	}
 	else if (cub->direction == 'S')
 	{
-		set_pos(&cub->dir, 1, 0);
 		set_pos(&game->dir, 1, 0);
 		set_pos(&game->plane, 0, -0.66);
 	}	
 	else if (cub->direction == 'E')
 	{
-		set_pos(&cub->dir, 0, 1);
 		set_pos(&game->dir, 0, 1);
 		set_pos(&game->plane, 0.66, 0);
 	}
 	else if (cub->direction == 'W')
 	{
-		set_pos(&cub->dir, 0, -1);
-		set_pos(&cub->dir, 0, -1);
+		set_pos(&game->dir, 0, -1);
 		set_pos(&game->plane, -0.66, 0);
 	}
 }
@@ -188,6 +216,8 @@ int		map_validation(t_cub *cub)
 
 	if (!(find_player(cub)))
 		return (print_error(NO_PLAYER));
+	if (!(find_sprite(cub)))
+		return (print_error(TOO_MANY_SP));
 	if (!(visited = ft_strdup_double(cub->map_buffer)))
 		return (print_error(PARSING_ERR));
 	map_dfs(cub, visited, cub->player.x, cub->player.y);

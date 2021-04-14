@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:31:09 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/12 15:53:06 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/14 15:57:59 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ void	clear_game(t_game *game)
 		clear_cub(game->cub);
 	if (game->window != NULL)
 		clear_window(game->window);
+	if (game->buf != NULL || game->z_buf != NULL)
+		clear_buf(game);
 	free(game);
 	game = NULL;
 }

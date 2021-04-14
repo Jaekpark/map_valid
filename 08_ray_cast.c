@@ -6,12 +6,65 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 12:29:20 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/13 19:01:10 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/14 17:52:20 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+void	set_sprite(t_game *game, t_sprite *item)
+{
+	item->ray.x = item->sp.x - game->player.x;
+	item->ray.y = item->sp.y - game->player.y;
+	item->inv = 1.0 / (game->plane.x * game->dir.y - game->dir.x * game->plane.y);
+	item->trans.x = item->inv * (game->dir.y * item->ray.x - game->dir.x * item->ray.y);
+	item->trans.y = item->inv * (-game->plane.y * item->ray.x + game->plane.x * item->ray.y);
+	item->screen_x = (int)((game->width / 2) * (1 + item->trans.x / item->trans.y));
+	item->v_mv_screen = (int)(item->v_mv / item->trans.y);
+	item->sp_height = (int)fabs((game->height / item->trans.y) / item->v_div);
+	item->start_y = -item->sp_height / 2 + game->height / 2 + item->v_mv_screen;
+	item->end_y = item->sp_height / 2 + game->height / 2 + item->v_mv_screen;
+	if (item->start_y < 0)
+		item->start_y = 0;
+	if (item->end_y >= game->height)
+		item->end_y = game->height - 1;
+	item->sp_width = (int)fabs((game->height / item->trans.y) / item->u_div);
+	item->start_x = -item->sp_width / 2 + item->screen_x;
+	item->end_x = item->sp_width / 2 + item->screen_x;
+	if (item->start_x < 0)
+		item->start_x = 0;
+	if (item->end_x >= game->width)
+		item->end_x = game->width - 1;
+}
+
+void	sprite_casting(t_game *game, t_sprite *item, int stripe)
+{
+	int y;
+	int d;
+	int color;
+	int tex_width;
+	int tex_height;
+
+	d = 0;
+	color = 0;
+	y = item->start_y;
+	tex_width = game->texture[SPRITE_TEX].width;
+	tex_height = game->texture[SPRITE_TEX].height;
+	item->tex_x = (int)((256 * (stripe - (-item->sp_width / 2 + item->screen_x)) * tex_width / item->sp_width) / 256);
+	if (item->trans.y > 0 && stripe > 0 && stripe < game->width && item->trans.y < game->z_buf[stripe])
+	{
+		while (y < item->end_y)
+		{
+			d = (y - item->v_mv_screen) * 256 - game->height * 128 + item->sp_height * 128;
+			item->tex_y = ((d * tex_height) / item->sp_height) / 256;
+			color = game->texture[SPRITE_TEX].data[tex_width * item->tex_y + item->tex_x];
+			if ((color & 0x00FFFFFF) != 0)
+				game->buf[y][stripe] = color;
+			y++;
+		}
+	}
+
+}
 void	init_floor(t_floor *floor)
 {
 	floor->half = 0;
@@ -57,11 +110,11 @@ void	draw(t_game *game)
 	int y;
 
 	y = 0;
-	while (y < (int)game->window->screen_size.y)
+	while (y < (int)game->height)
 	{
 		x = -1;
-		while (++x < (int)game->window->screen_size.x)
-			game->window->screen.data[y * (int)game->window->screen_size.x + x] = game->buf[y][x];
+		while (++x < (int)game->width)
+			game->window->screen.data[y * (int)game->width + x] = game->buf[y][x];
 		y++;
 	}
 	mlx_put_image_to_window(game->window->ptr, game->window->win, game->window->screen.img, 0, 0);
@@ -80,7 +133,7 @@ void	coord_tex(t_game *game, t_raycast *raycast, int x)
 	if (raycast->side == 1 && raycast->ray_dir.y < 0)
 		raycast->tex_x = game->texture[raycast->tex_idx].width - raycast->tex_x - 1;
 	raycast->step = 1.0 * game->texture[raycast->tex_idx].height / raycast->line_height;
-	raycast->tex_pos = (raycast->draw_start - game->window->screen_size.y / 2 + raycast->line_height / 2) * raycast->step;
+	raycast->tex_pos = (raycast->draw_start - game->height / 2 + raycast->line_height / 2) * raycast->step;
 	while (y < raycast->draw_end)
 	{
 		raycast->tex_y = (int)raycast->tex_pos & (game->texture[raycast->tex_idx].height - 1);
@@ -91,6 +144,7 @@ void	coord_tex(t_game *game, t_raycast *raycast, int x)
 		game->buf[y][x] = color;
 		y++;
 	}
+	game->z_buf[x] = raycast->perp_wall_dist;
 }
 
 void	set_draw_param(t_game *game, t_raycast *raycast)
@@ -100,13 +154,13 @@ void	set_draw_param(t_game *game, t_raycast *raycast)
 		raycast->perp_wall_dist = (raycast->map_x - game->player.x + (1 - raycast->step_x) / 2) / raycast->ray_dir.x;
 	else
 		raycast->perp_wall_dist = (raycast->map_y - game->player.y + (1 - raycast->step_y) / 2) / raycast->ray_dir.y;
-	raycast->line_height = (int)(game->window->screen_size.y / raycast->perp_wall_dist);
-	raycast->draw_start = -raycast->line_height / 2 + game->window->screen_size.y / 2;
-	raycast->draw_end = raycast->line_height / 2 + game->window->screen_size.y / 2;
+	raycast->line_height = (int)(game->height / raycast->perp_wall_dist);
+	raycast->draw_start = -raycast->line_height / 2 + game->height / 2;
+	raycast->draw_end = raycast->line_height / 2 + game->height / 2;
 	if (raycast->draw_start < 0)
 		raycast->draw_start = 0;
-	if (raycast->draw_end >= game->window->screen_size.y)
-		raycast->draw_end = game->window->screen_size.y - 1;
+	if (raycast->draw_end >= game->height)
+		raycast->draw_end = game->height - 1;
 	if (raycast->side == 0)
 		raycast->wall_x = game->player.y + raycast->perp_wall_dist * raycast->ray_dir.y;
 	else
@@ -172,7 +226,7 @@ void	set_side_dist(t_game *game, t_raycast *raycast)
 
 void	set_ray(t_game *game, t_raycast *raycast, int x)
 {
-	raycast->camera_x = 2 * x / (double)game->window->screen_size.x - 1;
+	raycast->camera_x = 2 * x / (double)game->width - 1;
 	raycast->ray_dir.x = game->dir.x + game->plane.x * raycast->camera_x;
 	raycast->ray_dir.y = game->dir.y + game->plane.y * raycast->camera_x;
 	raycast->map_x = (int)game->player.x;
@@ -202,43 +256,59 @@ void	floor_cast(t_game *game, t_floor *floor, int x, int y)
 	game->buf[y][x] = color;
 	color = game->texture[CEIL_TEX].data[game->texture[CEIL_TEX].width * floor->tex_y + floor->tex_x];
 	color = (color >> 1) & 8355711;
-	game->buf[(int)game->window->screen_size.y - y - 1][x] = color;
+	game->buf[(int)game->height - y - 1][x] = color;
 }
 
 void	set_floor_ray(t_game *game, t_floor *floor, int y)
 {
 	set_pos(&floor->ray_dir_l, game->dir.x - game->plane.x, game->dir.y - game->plane.y);
 	set_pos(&floor->ray_dir_r, game->dir.x + game->plane.x, game->dir.y + game->plane.y);
-	floor->pos_y = y - (int)game->window->screen_size.y / 2;
-	floor->half = 0.5 * game->window->screen_size.y;
+	floor->pos_y = y - (int)game->height / 2;
+	floor->half = 0.5 * game->height;
 	floor->row_dist = floor->half / floor->pos_y;
-	floor->step.x = floor->row_dist * (floor->ray_dir_r.x - floor->ray_dir_l.x) / game->window->screen_size.x;
-	floor->step.y = floor->row_dist * (floor->ray_dir_r.y - floor->ray_dir_l.y) / game->window->screen_size.x; 
+	floor->step.x = floor->row_dist * (floor->ray_dir_r.x - floor->ray_dir_l.x) / game->width;
+	floor->step.y = floor->row_dist * (floor->ray_dir_r.y - floor->ray_dir_l.y) / game->width; 
 	floor->fl.x = game->player.x + floor->row_dist * floor->ray_dir_l.x;
 	floor->fl.y = game->player.y + floor->row_dist * floor->ray_dir_l.y;
+}
+void	wall_casting(t_game *game, int x)
+{
+	set_ray(game, &game->raycast, x);
+	set_side_dist(game, &game->raycast);
+	dda(game, &game->raycast);
+	set_draw_param(game, &game->raycast);
+	coord_tex(game, &game->raycast, x);
 }
 
 void	calc(t_game *game)
 {
 	int x;
 	int y;
+	int stripe;
 
 	y = -1;
-	while (++y < game->window->screen_size.y)
+	while (++y < game->height)
 	{
 		set_floor_ray(game, &game->floor, y);
 		x = -1;
-		while (++x < game->window->screen_size.x)
+		while (++x < game->width)
 			floor_cast(game, &game->floor, x, y);
 	}
 	x = -1;
-	while (++x < game->window->screen_size.x)
+	while (++x < game->width)
+		wall_casting(game, x);
+		// set_ray(game, &game->raycast, x);
+		// set_side_dist(game, &game->raycast);
+		// dda(game, &game->raycast);
+		// set_draw_param(game, &game->raycast);
+		// coord_tex(game, &game->raycast, x);
+	set_sprite(game, &game->sprite);
+	stripe = game->sprite.start_x;
+	//printf("stripe =  %d, %d\n", stripe, game->sprite.end_x);
+	while (stripe < game->sprite.end_x)
 	{
-		set_ray(game, &game->raycast, x);
-		set_side_dist(game, &game->raycast);
-		dda(game, &game->raycast);
-		set_draw_param(game, &game->raycast);
-		coord_tex(game, &game->raycast, x);
+		sprite_casting(game, &game->sprite, stripe);
+		stripe++;
 	}
 }
 

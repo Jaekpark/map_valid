@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:53 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/13 19:31:25 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/14 17:25:29 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,43 @@ void	init_key(t_key *key)
 	key->esc = 0;
 	key->s = 0;
 	key->d = 0;
+}
+void	clear_buf(t_game *game)
+{
+	int i;
+	int height;
+
+	i = -1;
+	height = (int)game->window->screen_size.y;
+	if (game->z_buf != NULL)
+	{
+		free(game->z_buf);
+		game->z_buf = NULL;
+	}
+	if (game->buf != NULL)
+	{
+		while (++i < height)
+			free(game->buf[i]);
+		free(game->buf);
+		game->buf = NULL;
+	}
+}
+
+void	set_buf(t_game *game)
+{
+	int i;
+	int width;
+	int height;
+
+	i = -1;
+	width = (int)game->window->screen_size.x;
+	height = (int)game->window->screen_size.y;
+	if (!(game->z_buf = malloc(sizeof(double) * width)))
+		return ;
+	if (!(game->buf = malloc(sizeof(int *) * height)))
+		return ;
+	while (++i < height)
+		game->buf[i] = malloc(sizeof(int) * width);
 }
 
 t_list	*init_list(t_list *list)
@@ -67,6 +104,26 @@ void	set_pos(t_pos *pos, double x, double y)
 	pos->y = y;
 }
 
+void	init_sprite(t_sprite *sprite)
+{
+	sprite->trans.x = 0;
+	sprite->trans.y = 0;
+	sprite->v_mv = 0;
+	sprite->u_div = 1;
+	sprite->v_div = 1;
+	sprite->v_mv_screen = 0;
+	sprite->sp_width = 0;
+	sprite->sp_height = 0;
+	sprite->screen_x = 0;
+	sprite->start_x = 0;
+	sprite->start_y = 0;
+	sprite->end_x = 0;
+	sprite->end_y = 0;
+	sprite->tex_x = 0;
+	sprite->tex_y = 0;
+	sprite->inv = 0;
+}
+
 t_cub	*init_cub(t_cub *cub)
 {
 	if (!(cub = malloc(sizeof(t_cub))))
@@ -81,8 +138,8 @@ t_cub	*init_cub(t_cub *cub)
 	cub->ceiling_color = 0;
 	cub->player.x = 0;
 	cub->player.y = 0;
-	cub->dir.x = 0;
-	cub->dir.y = 0;
+	cub->sprite.x = 0;
+	cub->sprite.y = 0;
 	cub->direction = 0;
 	cub->invalid_map = 0;
 	cub->map_buffer = NULL;
@@ -144,9 +201,13 @@ t_game 	*init_game(t_cub *cub, t_game *game)
 	game->mv_speed = 0.1;
 	game->rot_speed = 0.1;
 	game->cub = cub;
+	game->width = (int)game->window->screen_size.x;
+	game->height = (int)game->window->screen_size.y;
+	set_buf(game);
 	init_key(&game->key);
+	set_pos(&game->sprite.sp, cub->sprite.x, cub->sprite.y);
 	set_pos(&game->plane, 0, 0);
-	set_pos(&game->player, cub->player.x, cub->player.y);
-	set_pos(&game->dir, cub->dir.x, cub->dir.y);
+	set_pos(&game->player, cub->player.x + 0.5, cub->player.y + 0.5);
+	set_pos(&game->dir, 0, 0);
 	return (game);
 }
