@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 11:37:52 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/11 23:02:33 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/15 17:04:17 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int		set_base_width(char **map_buffer)
 	return (width);
 }
 
-void	set_map_buffer(t_cub *cub)
+void	make_map_buffer(t_cub *cub)
 {
 	int		i;
 	int		count;
@@ -91,6 +91,6 @@ int		list_to_buffer(t_cub *cub)
 	cub->map_buffer = temp;
 	cub->cols = set_base_width(cub->map_buffer);
 	cub->rows = size;
-	set_map_buffer(cub);
+	make_map_buffer(cub);
 	return (1);
 }

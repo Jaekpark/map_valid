@@ -6,11 +6,32 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:31:09 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/14 15:57:59 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/15 16:17:31 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	clear_screen_buf(t_game *game)
+{
+	int i;
+	int height;
+
+	i = -1;
+	height = (int)game->window->screen_size.y;
+	if (game->z_buf != NULL)
+	{
+		free(game->z_buf);
+		game->z_buf = NULL;
+	}
+	if (game->buf != NULL)
+	{
+		while (++i < height)
+			free(game->buf[i]);
+		free(game->buf);
+		game->buf = NULL;
+	}
+}
 
 void	clear_map(t_list *map)
 {

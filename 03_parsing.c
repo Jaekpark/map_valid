@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 18:03:47 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/13 15:18:15 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/15 17:09:50 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,19 @@ int parsing_path(t_cub *cub, char *line, int index)
 	path = ft_split(line, ' ');
 	if (!path)
 		return (-1);
-	else if (index == NORTH_TEX)
+	else if (index == N_TEX)
 		cub->path->north = ft_strdup(path[1]);
-	else if (index == SOUTH_TEX)
+	else if (index == S_TEX)
 		cub->path->south = ft_strdup(path[1]);
-	else if (index == EAST_TEX)
+	else if (index == E_TEX)
 		cub->path->east = ft_strdup(path[1]);
-	else if (index == WEST_TEX)
+	else if (index == W_TEX)
 		cub->path->west = ft_strdup(path[1]);
-	else if (index == SPRITE_TEX)
+	else if (index == SP_TEX)
 		cub->path->sprite = ft_strdup(path[1]);
-	else if (index == FLOOR_TEX)
+	else if (index == FL_TEX)
 		cub->path->floor = ft_strdup(path[1]);
-	else if (index == CEIL_TEX)
+	else if (index == CE_TEX)
 		cub->path->ceil = ft_strdup(path[1]);
 	double_ptr_mem_free(path);
 	return (1);
@@ -136,9 +136,9 @@ int parsing_color(t_cub *cub, char *line, int index)
 		double_ptr_mem_free(color);	
 		return (-1);
 	}
-	if (index == CEIL_COL)
+	if (index == CE_COL)
 		cub->ceiling_color = rgb;
-	else if (index == FLOOR_COL)
+	else if (index == FL_COL)
 		cub->floor_color = rgb;
 	double_ptr_mem_free(color);
 	return (1);

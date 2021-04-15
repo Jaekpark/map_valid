@@ -27,16 +27,17 @@
 # define NOT_SURROUNDED 107
 # define NO_TEX 108
 # define TOO_MANY_SP 109
+# define INIT_FAIL 110
 
-# define NORTH_TEX 0
-# define SOUTH_TEX 1
-# define EAST_TEX 2
-# define WEST_TEX 3
-# define SPRITE_TEX 4
-# define FLOOR_TEX 5
-# define CEIL_TEX 6
-# define FLOOR_COL 7
-# define CEIL_COL 8
+# define N_TEX 0
+# define S_TEX 1
+# define E_TEX 2
+# define W_TEX 3
+# define SP_TEX 4
+# define FL_TEX 5
+# define CE_TEX 6
+# define FL_COL 7
+# define CE_COL 8
 # define RESOLUTION 9
 # define EMPTY_LINE 10
 # define MAP_LINE 11
@@ -188,7 +189,6 @@ typedef struct s_sprite
 	
 }	t_sprite;
 
-
 typedef struct	s_cub
 {
 	char	direction;
@@ -201,6 +201,7 @@ typedef struct	s_cub
 	int floor_color;
 	int ceiling_color;
 	int	invalid_map;
+	int sprite_cnt;
 	char **map_buffer;
 	t_pos	player;
 	t_pos	sprite;
@@ -212,7 +213,7 @@ typedef struct 	s_game
 {
 	t_cub *cub;
 	t_win *window;
-	t_tex texture[7];
+	t_tex tex[7];
 	t_key key;
 	t_pos player;;
 	t_pos dir;
@@ -228,14 +229,40 @@ typedef struct 	s_game
 	double rot_speed;
 }	t_game;
 
+// set_game
+int		set_default_config(t_game *game, t_cub *cub, int fd);
+void	set_player_dir(t_game *game, t_cub *cub);
+void	set_screen_buf(t_game *game);
+void	set_pos(t_pos *pos, double x, double y);
+int		set_screen_size(t_cub *cub, t_pos *screen_size);
+
+// set_raycast_param
+void	set_sprite_ray(t_game *game, t_sprite *item);
+void	set_floor_ray(t_game *game, t_floor *floor, int y);
+void	set_wall_ray(t_game *game, t_raycast *raycast, int x);
+void	set_side_dist(t_game *game, t_raycast *raycast);
+void	set_draw_wall_param(t_game *game, t_raycast *raycast);
+
+// run_casting
+void	calc(t_game *game);
+void	draw(t_game *game);
+int		main_loop(t_game *game);
+
+//close
+int		close_cub(t_cub *cub);
 
 // print
-void print_cub(t_cub *cub);
-void print_path(t_path *path);
-void print_game(t_game *game);
+void	print_path(t_path *path);
+void	print_game(t_game *game);
+void	print_node(t_list *list);
+void	print_cub(t_cub *cub);
 
 //ray_cast
-int		main_loop(t_game *game);
+void	coord_tex(t_game *game, t_raycast *raycast, int x);
+void	dda(t_game *game, t_raycast *raycast);
+void	sprite_casting(t_game *game, t_sprite *item, int stripe);
+void	floor_casting(t_game *game, t_floor *floor, int x, int y);
+void	wall_casting(t_game *game, int x);
 
 // key
 int		key_release(int key, t_game *game);
@@ -245,14 +272,14 @@ void	rot_right_left(t_game *game);
 void	mv_forward_back(t_game *game, char **map_buffer);
 
 // load_texture
-void	load_texture(t_game *game);
-void	load_img(t_game *game, t_tex *texture, char *path);
+void	load_tex(t_game *game);
+void	load_tex_img(t_game *game, t_tex *tex, char *path);
 
 // list_to_buffer
 int		list_to_buffer(t_cub *cub);
 char	*make_blank(int count);
 int		set_base_width(char **map_buffer);
-void	set_map_buffer(t_cub *cub);
+void	make_map_buffer(t_cub *cub);
 
 // map_valid
 void	map_dfs(t_cub *cub, char **visited, int x, int y);
@@ -264,8 +291,7 @@ void	print_double_ptr(char **s);
 void	set_player_dir(t_game *game, t_cub *cub);
 
 // read
-void	print_node(t_list *list);
-void	print_cub(t_cub *cub);
+
 int		read_cub(t_cub *cub, int fd);
 int		parse_line(t_cub *cub, char *line, int eof);
 
@@ -287,6 +313,7 @@ char	*ft_strchr(char *s, int c);
 int		ft_strcmp(char *s1, char *s2);
 int		ft_strncmp(char *s1, char *s2, int num);
 char	**ft_strdup_dobule(char **s);
+int		ft_strlcpy(char *dest, const char *src, int dstsize);
 
 // gnl
 int		get_next_line(int fd, char **line);
@@ -311,8 +338,6 @@ t_cub	*init_cub(t_cub *cub);
 t_path	*init_tex(t_path *path);
 t_win	*init_window(t_cub *cub, t_win *window);
 t_game	*init_game(t_cub *cub, t_game *game);
-int		set_screen_size(t_cub *cub, t_pos *screen_size);
-void	set_pos(t_pos *pos, double x, double y);
 void	init_raycast(t_raycast *raycast);
 void	init_floor(t_floor *floor);
 void	init_sprite(t_sprite *sprite);
@@ -335,7 +360,6 @@ void	clear_map_buffer(char **map_buffer);
 void	clear_window(t_win *window);
 void	clear_game(t_game *game);
 void	clear_buf(t_game *game);
-
 
 // lst
 int		ft_lstsize(t_list *map);

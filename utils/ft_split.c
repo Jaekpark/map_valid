@@ -6,109 +6,96 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 19:09:41 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/09 11:27:41 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/15 20:17:24 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "cub3d.h"
 
-static int		word_count(char const *s, char c)
+static char			**ft_malloc_error(char **tab)
 {
-	int		count;
-	int		i;
+	unsigned int	i;
 
-	count = 0;
 	i = 0;
-	while (s[i])
+	while (tab[i])
 	{
-		if (s[i] != c && (s[i + 1] == c || s[i + 1] == '\0'))
-			count++;
+		free(tab[i]);
 		i++;
 	}
-	return (count);
+	free(tab);
+	return (NULL);
 }
 
-static int		*word_size(char const *s, char c)
+static unsigned int	ft_get_nb_strs(char const *s, char c)
 {
-	int		*arr;
-	int		size;
-	int		i;
-	int		j;
+	unsigned int	i;
+	unsigned int	nb_strs;
 
-	if (!(arr = malloc(sizeof(int) * word_count(s, c))))
-		return (NULL);
-	size = 0;
-	j = 0;
+	if (!s[0])
+		return (0);
 	i = 0;
+	nb_strs = 0;
+	while (s[i] && s[i] == c)
+		i++;
 	while (s[i])
 	{
-		if (s[i] != c)
+		if (s[i] == c)
 		{
-			size++;
-			if (s[i + 1] == c || s[i + 1] == '\0')
-			{
-				arr[j] = size;
-				size = 0;
-				j++;
-			}
+			nb_strs++;
+			while (s[i] && s[i] == c)
+				i++;
+			continue ;
 		}
 		i++;
 	}
-	return (arr);
+	if (s[i - 1] != c)
+		nb_strs++;
+	return (nb_strs);
 }
 
-static void		mem_allocate(char **dest, int *size, int count)
+static void			ft_get_next_str(char **next_str, unsigned int *next_str_len,
+					char c)
 {
-	int		i;
+	unsigned int i;
 
+	*next_str += *next_str_len;
+	*next_str_len = 0;
 	i = 0;
-	dest[count] = NULL;
-	while (count)
+	while (**next_str && **next_str == c)
+		(*next_str)++;
+	while ((*next_str)[i])
 	{
-		dest[i] = malloc(sizeof(char) * size[i] + 1);
-		i++;
-		count--;
-	}
-}
-
-void			double_ptr_mem_free(char **str)
-{
-	int		i;
-
-	i = 0;
-	while (str[i] != NULL)
-	{
-		free(str[i]);
+		if ((*next_str)[i] == c)
+			return ;
+		(*next_str_len)++;
 		i++;
 	}
-	free(str);
 }
 
-char			**ft_split(char const *s, char c)
+char				**ft_split(char const *s, char c)
 {
-	int		i;
-	int		j;
-	int		k;
-	int		*size;
-	char	**dest;
+	char			**tab;
+	char			*next_str;
+	unsigned int	next_str_len;
+	unsigned int	nb_strs;
+	unsigned int	i;
 
-	if (!s || !(dest = (char **)malloc(sizeof(char *) * word_count(s, c) + 1)))
+	if (!s)
 		return (NULL);
-	size = word_size(s, c);
-	mem_allocate(dest, size, word_count(s, c));
-	i = -1;
-	j = 0;
-	k = 0;
-	while (s[++i])
-		if (s[i] != c)
-		{
-			dest[j][k++] = s[i];
-			if (s[i + 1] == c || s[i + 1] == '\0')
-			{
-				dest[j++][k] = '\0';
-				k = 0;
-			}
-		}
-	free(size);
-	return (dest);
+	nb_strs = ft_get_nb_strs(s, c);
+	if (!(tab = (char **)malloc(sizeof(char *) * (nb_strs + 1))))
+		return (NULL);
+	i = 0;
+	next_str = (char *)s;
+	next_str_len = 0;
+	while (i < nb_strs)
+	{
+		ft_get_next_str(&next_str, &next_str_len, c);
+		if (!(tab[i] = (char *)malloc(sizeof(char) * (next_str_len + 1))))
+			return (ft_malloc_error(tab));
+		ft_strlcpy(tab[i], next_str, next_str_len + 1);
+		i++;
+	}
+	tab[i] = NULL;
+	return (tab);
 }

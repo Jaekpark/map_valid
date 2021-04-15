@@ -1,22 +1,22 @@
 #include "cub3d.h"
 
-void	load_img(t_game *game, t_tex *texture, char *path)
+void	load_tex_img(t_game *game, t_tex *tex, char *path)
 {
 	if (!game || !path)
 		return ;
-	texture->img = mlx_xpm_file_to_image(game->window->ptr, path, &texture->width, &texture->height);
-	texture->data = (int *)mlx_get_data_addr(texture->img, &texture->bpp, &texture->size_l, &texture->endian);
+	tex->img = mlx_xpm_file_to_image(game->window->ptr, path, &tex->width, &tex->height);
+	tex->data = (int *)mlx_get_data_addr(tex->img, &tex->bpp, &tex->size_l, &tex->endian);
 }
 
-void	load_texture(t_game *game)
+void	load_tex(t_game *game)
 {
 	if (!game)
 		return ;
-	load_img(game, &game->texture[NORTH_TEX], "./textures/north.xpm");
-	load_img(game, &game->texture[SOUTH_TEX], "./textures/south.xpm");
-	load_img(game, &game->texture[EAST_TEX], "./textures/east.xpm");
-	load_img(game, &game->texture[WEST_TEX], "./textures/west.xpm");
-	load_img(game, &game->texture[SPRITE_TEX], "./textures/sprite.xpm");
-	load_img(game, &game->texture[FLOOR_TEX], "./textures/floor.xpm");
-	load_img(game, &game->texture[CEIL_TEX], "./textures/ceil.xpm");
+	load_tex_img(game, &game->tex[N_TEX], "./textures/north.xpm");
+	load_tex_img(game, &game->tex[S_TEX], "./textures/south.xpm");
+	load_tex_img(game, &game->tex[E_TEX], "./textures/east.xpm");
+	load_tex_img(game, &game->tex[W_TEX], "./textures/west.xpm");
+	load_tex_img(game, &game->tex[SP_TEX], "./textures/sprite.xpm");
+	load_tex_img(game, &game->tex[FL_TEX], "./textures/floor.xpm");
+	load_tex_img(game, &game->tex[CE_TEX], "./textures/ceil.xpm");
 }

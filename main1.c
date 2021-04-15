@@ -1,5 +1,11 @@
 #include "cub3d.h"
 
+int	close_cub(t_cub *cub)
+{
+	clear_cub(cub);
+	return (-1);
+}
+
 int main(int argc, char **argv)
 {
 	int fd;
@@ -11,11 +17,10 @@ int main(int argc, char **argv)
 	ret = 0;
 	cub = NULL;
 	game = NULL;
-	cub = init_cub(cub);
-	fd = check_argv(argc, argv, cub);
-	
-	printf("fd = %d\n", fd);
-	printf("save_opt = %d\n", cub->save_opt);
+	if (!(cub = init_cub(cub)))
+		return (print_error(INIT_FAIL));
+	if ((fd = check_argv(argc, argv, cub)) < 3)
+		return (close_cub(cub));
 	if (fd >= 3)
 	{
 		ret = read_cub(cub, fd);
@@ -25,13 +30,14 @@ int main(int argc, char **argv)
 			ret = map_validation(cub);
 			printf("after map_valid ret = %d\n", ret);
 			game = init_game(cub, game);
+			print_cub(cub);
+			print_game(game);
 			set_player_dir(game, cub);
 			init_raycast(&game->raycast);
 			init_floor(&game->floor);
-			load_texture(game);
+			load_tex(game);
 			init_sprite(&game->sprite);
-			print_cub(cub);
-			print_game(game);
+
 		}
 	}
 	//mlx_hook(game->window->ptr, X_EVENT_KEY_PRESS, 0, &key_press, game);
@@ -49,6 +55,6 @@ int main(int argc, char **argv)
 	// if (ret == 0)
 	// 	printf("normal\n");
 	// clear_cub(cub);
-	//system("leaks cub3d > leaks_result_temp; cat leaks_result_temp | grep leaked && rm -rf leaks_result_temp");
+	system("leaks cub3d > leaks_result_temp; cat leaks_result_temp | grep leaked && rm -rf leaks_result_temp");
 	return (0);
 }

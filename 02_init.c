@@ -6,11 +6,70 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:53 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/14 17:25:29 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/15 16:17:03 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	init_floor(t_floor *floor)
+{
+	floor->half = 0;
+	floor->row_dist = 0;
+	floor->pos_y = 0;
+	floor->tex_x = 0;
+	floor->tex_y = 0;
+	floor->ce_x = 0;
+	floor->ce_y = 0;
+	set_pos(&floor->fl, 0, 0);
+	set_pos(&floor->step, 0, 0);
+	set_pos(&floor->ray_dir_l, 0, 0);
+	set_pos(&floor->ray_dir_r, 0, 0);
+}
+
+void	init_raycast(t_raycast *raycast)
+{
+	raycast->camera_x = 0;
+	raycast->draw_end = 0;
+	raycast->draw_start = 0;
+	raycast->hit = 0;
+	raycast->line_height = 0;
+	raycast->perp_wall_dist = 0;
+	raycast->side = 0;
+	raycast->map_x = 0;
+	raycast->map_y = 0;
+	raycast->step_x = 0;
+	raycast->step_y = 0;
+	raycast->wall_x = 0;
+	raycast->tex_idx = 0;
+	raycast->tex_pos = 0;
+	raycast->tex_x = 0;
+	raycast->tex_y = 0;
+	raycast->step = 0;
+	set_pos(&raycast->delta_dist, 0, 0);
+	set_pos(&raycast->ray_dir, 0, 0);
+	set_pos(&raycast->side_dist, 0, 0);
+}
+
+void	init_sprite(t_sprite *sprite)
+{
+	sprite->trans.x = 0;
+	sprite->trans.y = 0;
+	sprite->v_mv = 0;
+	sprite->u_div = 1;
+	sprite->v_div = 1;
+	sprite->v_mv_screen = 0;
+	sprite->sp_width = 0;
+	sprite->sp_height = 0;
+	sprite->screen_x = 0;
+	sprite->start_x = 0;
+	sprite->start_y = 0;
+	sprite->end_x = 0;
+	sprite->end_y = 0;
+	sprite->tex_x = 0;
+	sprite->tex_y = 0;
+	sprite->inv = 0;
+}
 
 void	init_key(t_key *key)
 {
@@ -20,6 +79,7 @@ void	init_key(t_key *key)
 	key->s = 0;
 	key->d = 0;
 }
+
 void	clear_buf(t_game *game)
 {
 	int i;
@@ -39,23 +99,6 @@ void	clear_buf(t_game *game)
 		free(game->buf);
 		game->buf = NULL;
 	}
-}
-
-void	set_buf(t_game *game)
-{
-	int i;
-	int width;
-	int height;
-
-	i = -1;
-	width = (int)game->window->screen_size.x;
-	height = (int)game->window->screen_size.y;
-	if (!(game->z_buf = malloc(sizeof(double) * width)))
-		return ;
-	if (!(game->buf = malloc(sizeof(int *) * height)))
-		return ;
-	while (++i < height)
-		game->buf[i] = malloc(sizeof(int) * width);
 }
 
 t_list	*init_list(t_list *list)
@@ -96,34 +139,6 @@ t_path	*init_base_tex(t_path *path)
 	return (path);
 }
 
-void	set_pos(t_pos *pos, double x, double y)
-{
-	if (!pos)
-		return ;
-	pos->x = x;
-	pos->y = y;
-}
-
-void	init_sprite(t_sprite *sprite)
-{
-	sprite->trans.x = 0;
-	sprite->trans.y = 0;
-	sprite->v_mv = 0;
-	sprite->u_div = 1;
-	sprite->v_div = 1;
-	sprite->v_mv_screen = 0;
-	sprite->sp_width = 0;
-	sprite->sp_height = 0;
-	sprite->screen_x = 0;
-	sprite->start_x = 0;
-	sprite->start_y = 0;
-	sprite->end_x = 0;
-	sprite->end_y = 0;
-	sprite->tex_x = 0;
-	sprite->tex_y = 0;
-	sprite->inv = 0;
-}
-
 t_cub	*init_cub(t_cub *cub)
 {
 	if (!(cub = malloc(sizeof(t_cub))))
@@ -142,38 +157,12 @@ t_cub	*init_cub(t_cub *cub)
 	cub->sprite.y = 0;
 	cub->direction = 0;
 	cub->invalid_map = 0;
+	cub->sprite_cnt = 0;
 	cub->map_buffer = NULL;
 	cub->map = init_list(cub->map);
 	cub->base_path = init_base_tex(cub->base_path);
 	cub->path = init_tex(cub->path);
 	return (cub);
-}
-
-int		set_screen_size(t_cub *cub, t_pos *screen_size)
-{
-	if (!cub || !screen_size)
-		return (-1);
-	if (cub->width <= 640)
-	{
-		screen_size->x = 640;
-		screen_size->y = 360;
-	}
-	else if (cub->width <= 1280)
-	{
-		screen_size->x = 1280;
-		screen_size->y = 720;
-	}
-	else if (cub->width <= 1600)
-	{
-		screen_size->x = 1600;
-		screen_size->y = 900;
-	}
-	else
-	{
-		screen_size->x = 1920;
-		screen_size->y = 1080;
-	}
-	return (1);
 }
 
 t_win 	*init_win(t_cub *cub, t_win *window)
@@ -203,7 +192,7 @@ t_game 	*init_game(t_cub *cub, t_game *game)
 	game->cub = cub;
 	game->width = (int)game->window->screen_size.x;
 	game->height = (int)game->window->screen_size.y;
-	set_buf(game);
+	set_screen_buf(game);
 	init_key(&game->key);
 	set_pos(&game->sprite.sp, cub->sprite.x, cub->sprite.y);
 	set_pos(&game->plane, 0, 0);

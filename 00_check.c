@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 18:17:15 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/12 16:17:05 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/15 17:00:03 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,23 +76,23 @@ int		check_identifier(char *line)
 	else if (ft_strncmp(line, "R ", 2) == 0)
 		return (RESOLUTION);
 	else if (ft_strncmp(line, "NO", 2) == 0)
-		return (NORTH_TEX);
+		return (N_TEX);
 	else if (ft_strncmp(line, "SO", 2) == 0)
-		return (SOUTH_TEX);
+		return (S_TEX);
 	else if (ft_strncmp(line, "EA", 2) == 0)
-		return (EAST_TEX);
+		return (E_TEX);
 	else if (ft_strncmp(line, "WE", 2) == 0)
-		return (WEST_TEX);
+		return (W_TEX);
 	else if (ft_strncmp(line, "S ", 2) == 0)
-		return (SPRITE_TEX);
+		return (SP_TEX);
 	else if (ft_strncmp(line, "F ", 2) == 0)
-		return (FLOOR_COL);
+		return (FL_COL);
 	else if (ft_strncmp(line, "C ", 2) == 0)
-		return (CEIL_COL);
+		return (CE_COL);
 	else if (ft_strncmp(line, "FT", 2) == 0)
-		return (FLOOR_TEX);
+		return (FL_TEX);
 	else if (ft_strncmp(line, "ST", 2) == 0)
-		return (CEIL_TEX);
+		return (CE_TEX);
 	else if (ft_ismap(line) == 1)
 		return (MAP_LINE);
 	else

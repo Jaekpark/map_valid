@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:29:48 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/14 16:43:50 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/15 14:38:16 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int		print_error(int error)
 	else if (error == NO_TEX)
 		printf("Error : Texture file does not exists.\n");
 	else if (error == TOO_MANY_SP)
-		printf("Error : Invalid map. Too many sprites.");
+		printf("Error : Invalid map. Too many sprites.\n");
+	else if (error == INIT_FAIL)
+		printf("Error : Initialize failed.\n");
 	return (-1);
 }

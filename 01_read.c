@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:50 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/14 16:48:08 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/15 20:23:19 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void print_game(t_game *game)
 	printf("|mv_speed, rot_speed = %f, %f|\n", game->mv_speed, game->rot_speed);
 	printf("|sprite x,y = %f, %f\n", game->sprite.sp.x, game->sprite.sp.y);
 	printf("|screen size = %f, %f|\n", game->window->screen_size.x, game->window->screen_size.y);
-	printf("|texture[0] height, width bpp = %d, %d, %d|\n", game->texture[0].height, game->texture[0].width, game->texture[0].bpp);
+	printf("|texture[0] height, width bpp = %d, %d, %d|\n", game->tex[1].height, game->tex[1].width, game->tex[1].bpp);
 	printf("---------t_game end----------\n");
 }
 
@@ -75,6 +75,15 @@ void print_node(t_list *list)
 	}
 }
 
+void	print_double_ptr(char **s)
+{
+	int i;
+
+	i = -1;
+	while (s[++i] != NULL)
+		printf("str[%2d] = |%s|\n", i, s[i]);
+}
+
 int		parse_line(t_cub *cub, char *line, int eof)
 {
 	int ret;
@@ -85,11 +94,11 @@ int		parse_line(t_cub *cub, char *line, int eof)
 		return (-1);
 	if (eof == 0 && index == EMPTY_LINE)
 		return (1);
-	if (cub->is_map == 1 && (index >= NORTH_TEX && index <= EMPTY_LINE))
+	if (cub->is_map == 1 && (index >= N_TEX && index <= EMPTY_LINE))
 		return (-1);
-	else if (index >= NORTH_TEX && index <= CEIL_TEX)
+	else if (index >= N_TEX && index <= CE_TEX)
 		ret = parsing_path(cub, line, index);
-	else if (index == FLOOR_COL || index == CEIL_COL)
+	else if (index == FL_COL || index == CE_COL)
 		ret = parsing_color(cub, line, index);
 	else if (index == RESOLUTION)
 		ret = parsing_resolution(cub, line);
