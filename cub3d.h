@@ -7,12 +7,14 @@
 #include <fcntl.h>
 #include <math.h>
 #include "./mlx/mlx.h"
+#include "./mlxbeta/mlxbeta.h"
 
 # define MAP_EXTENSION ".cub"
 # define TEX_EXTENSION ".xpm"
 # define VALID_CHAR " 012NSEW"
 # define SAVE "--save"
 # define DIRECTION "NSEW"
+# define D_RATIO 0.5625
 
 # define OPEN_MAX 32
 # define BUFFER_SIZE 128
@@ -28,6 +30,8 @@
 # define NO_TEX 108
 # define TOO_MANY_SP 109
 # define INIT_FAIL 110
+# define TEX_EXT 111
+# define EMPTY_MAP 112
 
 # define N_TEX 0
 # define S_TEX 1
@@ -143,6 +147,8 @@ typedef struct s_win
 {
 	t_img screen;
 	t_pos screen_size;
+	int		sys_width;
+	int		sys_height;
 	void *ptr;
 	void *win;
 }			t_win;
@@ -206,7 +212,6 @@ typedef struct	s_cub
 	t_pos	player;
 	t_pos	sprite;
 	t_list	*map;
-	t_path	*base_path;
 	t_path	*path;
 }	t_cub;
 typedef struct 	s_game
@@ -234,7 +239,7 @@ int		set_default_config(t_game *game, t_cub *cub, int fd);
 void	set_player_dir(t_game *game, t_cub *cub);
 void	set_screen_buf(t_game *game);
 void	set_pos(t_pos *pos, double x, double y);
-int		set_screen_size(t_cub *cub, t_pos *screen_size);
+void	set_screen_size(t_cub *cub, t_win *win);
 
 // set_raycast_param
 void	set_sprite_ray(t_game *game, t_sprite *item);

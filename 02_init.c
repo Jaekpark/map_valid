@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:53 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/15 16:17:03 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 14:19:15 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,20 +125,6 @@ t_path	*init_tex(t_path *path)
 	return (path);
 }
 
-t_path	*init_base_tex(t_path *path)
-{
-	if (!(path = malloc(sizeof(t_path))))
-		return (NULL);
-	path->north = ft_strdup("./textures/north.xpm");
-	path->south = ft_strdup("./textures/south.xpm");
-	path->east = ft_strdup("./textures/east.xpm");
-	path->west = ft_strdup("./textures/west.xpm");
-	path->sprite = ft_strdup("./textures/sprite.xpm");
-	path->floor = ft_strdup("./textures/floor.xpm");
-	path->ceil = ft_strdup("./textures/ceil.xpm");
-	return (path);
-}
-
 t_cub	*init_cub(t_cub *cub)
 {
 	if (!(cub = malloc(sizeof(t_cub))))
@@ -149,8 +135,8 @@ t_cub	*init_cub(t_cub *cub)
 	cub->height = 0;
 	cub->cols = 0;
 	cub->rows = 0;
-	cub->floor_color = 0;
-	cub->ceiling_color = 0;
+	cub->floor_color = -1;
+	cub->ceiling_color = -1;
 	cub->player.x = 0;
 	cub->player.y = 0;
 	cub->sprite.x = 0;
@@ -160,7 +146,6 @@ t_cub	*init_cub(t_cub *cub)
 	cub->sprite_cnt = 0;
 	cub->map_buffer = NULL;
 	cub->map = init_list(cub->map);
-	cub->base_path = init_base_tex(cub->base_path);
 	cub->path = init_tex(cub->path);
 	return (cub);
 }
@@ -169,9 +154,9 @@ t_win 	*init_win(t_cub *cub, t_win *window)
 {
 	if (!(window = malloc(sizeof(t_win))))
 		return (NULL);
-	if (!(set_screen_size(cub, &window->screen_size)))
-		return (NULL);
 	window->ptr = mlx_init();
+	mlx_get_screen_size(window->ptr, &window->sys_width, &window->sys_height);
+	set_screen_size(cub, window);
 	window->win = mlx_new_window(window->ptr, (int)window->screen_size.x, (int)window->screen_size.y, "cub3D");
 	window->screen.img = mlx_new_image(window->ptr, (int)window->screen_size.x, (int)window->screen_size.y);
 	window->screen.data = (int *)mlx_get_data_addr(window->screen.img, &window->screen.bpp, &window->screen.size_l, &window->screen.endian);

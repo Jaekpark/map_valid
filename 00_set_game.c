@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 16:03:40 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/15 20:29:01 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 14:12:44 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	set_player_dir(t_game *game, t_cub *cub)
 		set_pos(&game->dir, 0, -1);
 		set_pos(&game->plane, -0.66, 0);
 	}
-	printf("$$$$$$$$$$$$$game detail = %f, %f\n", game->plane.x, game->plane.y);
 }
 
 void	set_screen_buf(t_game *game)
@@ -84,29 +83,21 @@ void	set_screen_buf(t_game *game)
 		game->buf[i] = malloc(sizeof(int) * width);
 }
 
-int		set_screen_size(t_cub *cub, t_pos *screen_size)
+void	set_screen_size(t_cub *cub, t_win *window)
 {
-	if (!cub || !screen_size)
-		return (-1);
-	if (cub->width <= 640)
+	if (window->sys_width <= cub->width)
 	{
-		screen_size->x = 640;
-		screen_size->y = 360;
+		window->screen_size.x = window->sys_width;
+		window->screen_size.y = window->sys_width * D_RATIO;
 	}
-	else if (cub->width <= 1280)
+	else if (cub->width < 640)
 	{
-		screen_size->x = 1280;
-		screen_size->y = 720;
-	}
-	else if (cub->width <= 1600)
-	{
-		screen_size->x = 1600;
-		screen_size->y = 900;
+		window->screen_size.x = 640;
+		window->screen_size.y = 640 * D_RATIO;
 	}
 	else
 	{
-		screen_size->x = 1920;
-		screen_size->y = 1080;
+		window->screen_size.x = cub->width;
+		window->screen_size.y = cub->width * D_RATIO;
 	}
-	return (1);
 }

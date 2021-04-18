@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:31:09 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/15 16:17:31 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 14:21:28 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,6 @@ void	clear_cub(t_cub *cub)
 		return ;
 	if (cub->path != NULL)
 		clear_path(cub->path);
-	if (cub->base_path != NULL)
-		clear_path(cub->base_path);
 	cub->path = NULL;
 	if (cub->map != NULL)
 		clear_map(cub->map);

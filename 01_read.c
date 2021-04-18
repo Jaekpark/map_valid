@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:50 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/15 20:23:19 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 14:21:06 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ void print_cub(t_cub *cub)
 	print_node(cub->map);
 	printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 	printf("player pos x, y = %f, %f\n", cub->player.x, cub->player.y);
-	printf("+++++base_path++++++\n");
-	print_path(cub->base_path);
 	printf("+++++  path  +++++++\n");
 	print_path(cub->path);
 	printf("---------------- t_cub end -------------\n");
