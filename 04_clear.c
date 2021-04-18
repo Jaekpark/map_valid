@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:31:09 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/18 14:21:28 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 18:48:42 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,21 @@ void	clear_cub(t_cub *cub)
 	cub = NULL;
 }
 
+void	clear_tex(t_game *game)
+{
+	int i;
+
+	i = -1;
+	if (game->tex[i].path != NULL)
+	{
+		free(game->tex[i].path);
+		game->tex[i].path = NULL;
+	}
+	while (++i <= CE_TEX)
+		if (game->tex[i].img != NULL)
+			mlx_destroy_image(game->window->ptr, game->tex[i].img);
+}
+
 void	clear_window(t_win *window)
 {
 	if (window->screen.img)
@@ -131,6 +146,7 @@ void	clear_game(t_game *game)
 		clear_cub(game->cub);
 	if (game->window != NULL)
 		clear_window(game->window);
+	clear_tex(game);
 	if (game->buf != NULL || game->z_buf != NULL)
 		clear_buf(game);
 	free(game);

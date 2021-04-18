@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 11:37:52 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/15 17:04:17 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 17:19:59 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int		list_to_buffer(t_cub *cub)
 	i = 0;
 	size = ft_lstsize(cub->map);
 	if (!(temp = malloc(sizeof(char *) * (size + 1))))
-		return (-1);
+		return (print_error(PARSING_ERR));
 	while (map_temp != NULL)
 	{
 		temp[i++] = ft_strdup(map_temp->line);

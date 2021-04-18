@@ -6,11 +6,19 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:29:48 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/15 14:38:16 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 22:48:40 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int		exit_game(t_game *game)
+{
+	if (game)
+		clear_game(game);
+	exit(0);
+	return (0);
+}
 
 int		print_error(int error)
 {
@@ -36,5 +44,21 @@ int		print_error(int error)
 		printf("Error : Invalid map. Too many sprites.\n");
 	else if (error == INIT_FAIL)
 		printf("Error : Initialize failed.\n");
+	else if (error == TEX_EXT)
+		printf("Error : Tex file extension was wrong.\n");
+	else if (error == COLOR_ERR)
+		printf("Error : Floor or ceil color was wrong.\n");
+	else if (error == EMPTY_MAP)
+		printf("Error : Invalid map. map is empty.\n");
+	else if (error == WRONG_RES)
+		printf("Error : Wrong resolution. Please check your map file.\n");
+	else if (error == AFTER_EMPTY)
+		printf("Error : Invalid map. Empty line exist in the map.\n");
+	else if (error == IDEN_IN_MAP)
+		printf("Error : Identifier exist in the map.\n");
+	else if (error == DOUBLE_PATH)
+		printf("Error : Texture path already exist.\n");
+	else if (error == UNABLE_MAP_CHAR)
+		printf("Error : Invalid map. Wrong characters in the map.\n");
 	return (-1);
 }

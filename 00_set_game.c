@@ -6,33 +6,33 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 16:03:40 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/18 14:12:44 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 20:48:05 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int		set_default_config(t_game *game, t_cub *cub, int fd)
-{
-	int ret;
+// int		set_default_config(t_game *game, t_cub *cub, int fd)
+// {
+// 	int ret;
 
-	ret = 0;
-	if (fd >= 3)
-	{
-		if ((ret = read_cub(cub, fd)) == -1)
-			return (close_cub(cub));
-		if ((ret = map_validation(cub)) == -1)
-			return (close_cub(cub));
-		if (!(game = init_game(cub, game)))
-			return (close_cub(cub));
-		set_player_dir(game, cub);
-		init_raycast(&game->raycast);
-		init_floor(&game->floor);
-		init_sprite(&game->sprite);
-		load_tex(game);
-	}
-	return (1);
-}
+// 	ret = 0;
+// 	if (fd >= 3)
+// 	{
+// 		if ((ret = read_cub(cub, fd)) == -1)
+// 			return (close_cub(cub));
+// 		if ((ret = map_validation(cub)) == -1)
+// 			return (close_cub(cub));
+// 		if (!(game = init_game(cub, game)))
+// 			return (close_cub(cub));
+// 		set_player_dir(game, cub);
+// 		init_raycast(&game->raycast);
+// 		init_floor(&game->floor);
+// 		init_sprite(&game->sprite);
+// 		load_tex(game);
+// 	}
+// 	return (1);
+// }
 
 void	set_pos(t_pos *pos, double x, double y)
 {

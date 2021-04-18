@@ -6,233 +6,10 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <math.h>
+#include "./struct.h"
+#include "./constant.h"
 #include "./mlx/mlx.h"
 #include "./mlxbeta/mlxbeta.h"
-
-# define MAP_EXTENSION ".cub"
-# define TEX_EXTENSION ".xpm"
-# define VALID_CHAR " 012NSEW"
-# define SAVE "--save"
-# define DIRECTION "NSEW"
-# define D_RATIO 0.5625
-
-# define OPEN_MAX 32
-# define BUFFER_SIZE 128
-
-# define NO_ARG 100
-# define WRONG_NAME 101
-# define WRONG_OPT 102
-# define PARSING_ERR 103
-# define OPEN_ERR 104
-# define COLOR_ERR 105
-# define NO_PLAYER 106
-# define NOT_SURROUNDED 107
-# define NO_TEX 108
-# define TOO_MANY_SP 109
-# define INIT_FAIL 110
-# define TEX_EXT 111
-# define EMPTY_MAP 112
-
-# define N_TEX 0
-# define S_TEX 1
-# define E_TEX 2
-# define W_TEX 3
-# define SP_TEX 4
-# define FL_TEX 5
-# define CE_TEX 6
-# define FL_COL 7
-# define CE_COL 8
-# define RESOLUTION 9
-# define EMPTY_LINE 10
-# define MAP_LINE 11
-
-# define X_EVENT_KEY_PRESS 2
-# define X_EVENT_KEY_RELEASE 3
-# define X_EVENT_KEY_EXIT 17
-
-# define KEY_W 13
-# define KEY_S 1
-# define KEY_D 2
-# define KEY_A 0
-# define KEY_ESC 53
-# define KEY_SP 49
-# define KEY_TAB 48
-# define KEY_UP 126
-# define KEY_DOWN 125
-# define KEY_RIGHT 124
-# define KEY_LEFT 123
-# define KEY_Q 12
-# define KEY_E 14
-
-typedef struct s_pos
-{
-	double	x;
-	double 	y;
-}			t_pos;
-
-typedef struct	s_img
-{
-	void	*img;
-	int		*data;
-	int		size_l;
-	int		bpp;
-	int		endian;
-
-}				t_img;
-
-typedef struct s_node
-{
-	char	*line;
-	struct s_node *next;
-}				t_node;
-
-typedef struct s_list
-{
-	struct s_node *curr;
-	struct s_node *head;
-	struct s_node *tail;
-}	t_list;
-
-typedef struct s_path
-{
-	char	*north;
-	char	*south;
-	char	*east;
-	char	*west;
-	char	*sprite;
-	char	*floor;
-	char	*ceil;
-}	t_path;
-
-typedef struct s_floor
-{
-	double half;
-	double row_dist;
-	int pos_y;
-	int tex_x;
-	int tex_y;
-	int ce_x;
-	int ce_y;
-	t_pos fl;
-	t_pos step;
-	t_pos ray_dir_l;
-	t_pos ray_dir_r;
-}	t_floor;
-
-typedef struct s_raycast
-{
-	double camera_x;
-	double perp_wall_dist;
-	int hit;
-	int side;
-	int	line_height;
-	int draw_start;
-	int draw_end;
-	int	map_x;
-	int map_y;
-	int step_x;
-	int step_y;
-	int tex_idx;
-	double wall_x;
-	int tex_x;
-	int tex_y;
-	double step;
-	double tex_pos;
-	t_pos ray_dir;
-	t_pos side_dist;
-	t_pos delta_dist;
-}		t_raycast;
-
-typedef struct s_win
-{
-	t_img screen;
-	t_pos screen_size;
-	int		sys_width;
-	int		sys_height;
-	void *ptr;
-	void *win;
-}			t_win;
-
-typedef struct s_tex
-{
-	void	*img;
-	int		*data;
-	int		bpp;
-	int		size_l;
-	int		endian;
-	int		width;
-	int		height;
-}			t_tex;
-
-typedef struct s_key
-{
-	int w;
-	int s;
-	int a;
-	int d;
-	int esc;
-}	t_key;
-
-typedef struct s_sprite
-{
-	t_pos ray;
-	t_pos sp;
-	t_pos trans;
-	double v_mv;
-	int u_div;
-	int v_div;
-	int v_mv_screen;
-	int sp_width;
-	int sp_height;
-	int	screen_x;
-	int start_x;
-	int start_y;
-	int end_x;
-	int end_y;
-	int tex_x;
-	int tex_y;
-	double inv;
-	
-}	t_sprite;
-
-typedef struct	s_cub
-{
-	char	direction;
-	int is_map;
-	int width;
-	int height;
-	int cols;
-	int rows;
-	int	save_opt;
-	int floor_color;
-	int ceiling_color;
-	int	invalid_map;
-	int sprite_cnt;
-	char **map_buffer;
-	t_pos	player;
-	t_pos	sprite;
-	t_list	*map;
-	t_path	*path;
-}	t_cub;
-typedef struct 	s_game
-{
-	t_cub *cub;
-	t_win *window;
-	t_tex tex[7];
-	t_key key;
-	t_pos player;;
-	t_pos dir;
-	t_pos plane;
-	t_raycast raycast;
-	t_floor floor;
-	t_sprite sprite;
-	int width;
-	int height;
-	double *z_buf;
-	int	**buf;
-	double mv_speed;
-	double rot_speed;
-}	t_game;
 
 // set_game
 int		set_default_config(t_game *game, t_cub *cub, int fd);
@@ -320,6 +97,8 @@ int		ft_strncmp(char *s1, char *s2, int num);
 char	**ft_strdup_dobule(char **s);
 int		ft_strlcpy(char *dest, const char *src, int dstsize);
 
+int		exit_game(t_game *game);
+int		exit_hook(t_game *game);
 // gnl
 int		get_next_line(int fd, char **line);
 
@@ -328,6 +107,9 @@ char	**ft_split(char const *s, char c);
 void	double_ptr_mem_free(char **str);
 
 // check
+int		check_tex_file(t_game *game);
+int		check_color_exist(t_cub *cub);
+int		check_path_exist(t_cub *cub);
 int		check_file_name(const char *file_name);
 int		check_option(const char *option);
 int		check_identifier(char *line);

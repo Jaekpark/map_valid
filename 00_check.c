@@ -6,28 +6,69 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 18:17:15 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/15 17:00:03 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 23:01:09 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void		fix_texture_path(t_path *path, t_path *base_path)
+int		check_color_exist(t_cub *cub)
 {
-	if (path->north == NULL)
-		path->north = ft_strdup(base_path->north);
-	if (path->south == NULL)
-		path->south = ft_strdup(base_path->south);
-	if (path->east == NULL)
-		path->east = ft_strdup(base_path->east);
-	if (path->west == NULL)
-		path->west = ft_strdup(base_path->west);
-	if (path->sprite == NULL)
-		path->sprite = ft_strdup(base_path->sprite);
-	if (path->floor == NULL)
-		path->floor = ft_strdup(base_path->floor);
-	if (path->ceil == NULL)
-		path->ceil = ft_strdup(base_path->ceil);
+	if (cub->floor_color == -1 || cub->ceiling_color == -1)
+		return (print_error(COLOR_ERR));
+	return (1);
+}
+
+int		check_file_open(char *path)
+{
+	int fd;
+
+	fd = 0;
+	if ((fd = open(path, O_RDONLY)) < 0)
+		return (-1);
+	else if (fd >= 3)
+		close(fd);
+	return (1);	
+}
+
+int		check_path_exist(t_cub *cub)
+{
+	printf("check path %s\n", cub->path->north);
+	if (check_file_open(cub->path->north) == -1)
+		return (print_error(NO_TEX));
+	if (check_file_open(cub->path->south) == -1)
+		return (print_error(NO_TEX));
+	if (check_file_open(cub->path->east) == -1)
+		return (print_error(NO_TEX));
+	if (check_file_open(cub->path->west) == -1)
+		return (print_error(NO_TEX));
+	if (check_file_open(MID_WALL_PATH) == -1)
+		return (print_error(NO_TEX));
+	if (cub->sprite_cnt == 1 && check_file_open(cub->path->sprite) == -1)
+		return (print_error(NO_TEX));
+	if (check_file_open(cub->path->ceil) == 1)
+		cub->c_tex = 1;
+	if (check_file_open(cub->path->floor) == 1)
+		cub->f_tex = 1;
+	return (1);
+}
+
+int		check_tex_file(t_game *game)
+{
+	int i;
+	int fd;
+
+	i = 0;
+	fd = 0;
+	while (i <= CE_TEX)
+	{
+		if (!(fd = open(game->tex[i].path, O_RDONLY)))
+			return (print_error(NO_TEX));
+		else if (fd >= 3)
+			close(fd);
+		i++;
+	}
+	return (1);
 }
 
 int		check_file_name(const char *file_name)
@@ -68,14 +109,9 @@ int		check_option(const char *option)
 		return (-1);
 	return (ft_strcmp((char *)option, SAVE));
 }
-
-int		check_identifier(char *line)
+int 	is_tex(char *line)
 {
-	if (line[0] == 0)
-		return (EMPTY_LINE);
-	else if (ft_strncmp(line, "R ", 2) == 0)
-		return (RESOLUTION);
-	else if (ft_strncmp(line, "NO", 2) == 0)
+	if (ft_strncmp(line, "NO", 2) == 0)
 		return (N_TEX);
 	else if (ft_strncmp(line, "SO", 2) == 0)
 		return (S_TEX);
@@ -85,18 +121,31 @@ int		check_identifier(char *line)
 		return (W_TEX);
 	else if (ft_strncmp(line, "S ", 2) == 0)
 		return (SP_TEX);
-	else if (ft_strncmp(line, "F ", 2) == 0)
-		return (FL_COL);
-	else if (ft_strncmp(line, "C ", 2) == 0)
-		return (CE_COL);
 	else if (ft_strncmp(line, "FT", 2) == 0)
 		return (FL_TEX);
 	else if (ft_strncmp(line, "ST", 2) == 0)
 		return (CE_TEX);
-	else if (ft_ismap(line) == 1)
+	return (-1);
+}
+
+int		check_identifier(char *line)
+{
+	if (line[0] == 0)
+		return (EMPTY_LINE);
+	if (ft_strncmp(line, "R ", 2) == 0)
+		return (RESOLUTION);
+	else if (is_tex(line) >= 0)
+		return (is_tex(line));
+	else if (ft_strncmp(line, "F ", 2) == 0)
+		return (FL_COL);
+	else if (ft_strncmp(line, "C ", 2) == 0)
+		return (CE_COL);
+	else if (ft_strchr(VALID_CHAR, line[0]) && ft_ismap(line) == 1)
 		return (MAP_LINE);
+	else if (ft_strchr(VALID_CHAR, line[0]) && ft_ismap(line) == -1)
+		return (print_error(UNABLE_MAP_CHAR));
 	else
-		return (-1);
+		return (print_error(print_error(PARSING_ERR)));
 }
 
 int		check_argv(int argc, char **argv, t_cub *cub)

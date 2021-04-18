@@ -1,5 +1,5 @@
 SRCS			=	./00_check.c ./00_error.c ./00_run_cast.c ./00_set_game.c ./00_set_ray_cast.c \
-					./01_read.c ./02_init.c ./03_parsing.c ./04_clear.c \
+					./01_read.c ./02_init.c ./03_parsing.c ./04_clear.c ./99_exit.c\
 					./05_list_to_buffer.c ./05_map_valid.c ./06_texture.c ./07_key.c ./08_ray_cast.c\
 					./utils/ft_atoi.c ./utils/ft_gnl.c ./utils/ft_lstsize.c \
 					./utils/ft_utils_is.c ./utils/ft_utils_str.c ./main1.c \

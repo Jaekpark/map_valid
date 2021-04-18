@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/13 12:29:20 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/15 18:53:12 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 17:34:20 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,23 +90,44 @@ void	dda(t_game *game, t_raycast *raycast)
 	}
 }
 
-void	floor_casting(t_game *game, t_floor *floor, int x, int y)
+void	floor_tex_casting(t_game *game, t_floor *floor, int x, int y)
+{
+	int color;
+	
+	color = 0;
+	floor->tex_x = (int)(game->tex[FL_TEX].width * (floor->fl.x - floor->ce_x)) & (game->tex[FL_TEX].width - 1);
+	floor->tex_y = (int)(game->tex[FL_TEX].height * (floor->fl.y - floor->ce_y)) & (game->tex[FL_TEX].height - 1);
+	color = game->tex[FL_TEX].data[game->tex[FL_TEX].width * floor->tex_y + floor->tex_x];
+	color = (color >> 1) & 8355711;
+	game->buf[y][x] = color;
+}
+
+void	ceil_tex_casting(t_game *game, t_floor *floor, int x, int y)
 {
 	int color;
 
 	color = 0;
-	floor->ce_x = (int)(floor->fl.x);
-	floor->ce_y = (int)(floor->fl.y);
-	floor->tex_x = (int)(game->tex[FL_TEX].width * (floor->fl.x - floor->ce_x)) & (game->tex[FL_TEX].width - 1);
-	floor->tex_y = (int)(game->tex[FL_TEX].height * (floor->fl.y - floor->ce_y)) & (game->tex[FL_TEX].height - 1);
-	floor->fl.x += floor->step.x;
-	floor->fl.y += floor->step.y;
-	color = game->tex[FL_TEX].data[game->tex[FL_TEX].width * floor->tex_y + floor->tex_x];
-	color = (color >> 1) & 8355711;
-	game->buf[y][x] = color;
+	floor->tex_x = (int)(game->tex[CE_TEX].width * (floor->fl.x - floor->ce_x)) & (game->tex[CE_TEX].width - 1);
+	floor->tex_y = (int)(game->tex[CE_TEX].height * (floor->fl.y - floor->ce_y)) & (game->tex[CE_TEX].height - 1);
 	color = game->tex[CE_TEX].data[game->tex[CE_TEX].width * floor->tex_y + floor->tex_x];
 	color = (color >> 1) & 8355711;
-	game->buf[(int)game->height - y - 1][x] = color;
+	game->buf[game->height - y - 1][x] = color;
+}
+
+void		floor_casting(t_game *game, t_floor *floor, int x, int y)
+{
+	floor->ce_x = (int)(floor->fl.x);
+	floor->ce_y = (int)(floor->fl.y);
+	floor->fl.x += floor->step.x;
+	floor->fl.y += floor->step.y;
+	if (game->cub->f_tex == 1)
+		floor_tex_casting(game, floor, x, y);
+	else if (game->cub->f_tex == 0)
+		game->buf[y][x] = game->cub->floor_color;
+	if (game->cub->c_tex == 1)
+		ceil_tex_casting(game, floor, x, y);
+	else if (game->cub->c_tex == 0)
+		game->buf[game->height - y - 1][x] = game->cub->ceiling_color;
 }
 
 void	wall_casting(t_game *game, int x)

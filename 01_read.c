@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:50 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/18 14:21:06 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 22:51:46 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int		parse_line(t_cub *cub, char *line, int eof)
 	if (eof == 0 && index == EMPTY_LINE)
 		return (1);
 	if (cub->is_map == 1 && (index >= N_TEX && index <= EMPTY_LINE))
-		return (-1);
+		return (print_error(IDEN_IN_MAP));
 	else if (index >= N_TEX && index <= CE_TEX)
 		ret = parsing_path(cub, line, index);
 	else if (index == FL_COL || index == CE_COL)

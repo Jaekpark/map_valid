@@ -6,37 +6,49 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 18:03:47 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/15 17:09:50 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 22:50:48 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
+int put_path(char **dest, char *src)
+{
+	printf("put _path %s\n", *dest);
+	if (!src)
+		return (print_error(PARSING_ERR));
+	if (*dest)
+		return (print_error(DOUBLE_PATH));
+	else
+		*dest = ft_strdup(src);
+	return (1);
+}
+
 int parsing_path(t_cub *cub, char *line, int index)
 {
 	char **path;
+	int ret;
 
+	ret = 0;
 	if ((check_file_extension(line, TEX_EXTENSION)) != 0)
-		return (-1);
+		return (print_error(TEX_EXT));
 	path = ft_split(line, ' ');
-	if (!path)
-		return (-1);
-	else if (index == N_TEX)
-		cub->path->north = ft_strdup(path[1]);
+	if (index == N_TEX)
+		ret = put_path(&cub->path->north, path[1]);
 	else if (index == S_TEX)
-		cub->path->south = ft_strdup(path[1]);
+		ret = put_path(&cub->path->south, path[1]);
 	else if (index == E_TEX)
-		cub->path->east = ft_strdup(path[1]);
+		ret = put_path(&cub->path->east, path[1]);
 	else if (index == W_TEX)
-		cub->path->west = ft_strdup(path[1]);
+		ret =put_path(&cub->path->west, path[1]);
 	else if (index == SP_TEX)
-		cub->path->sprite = ft_strdup(path[1]);
+		ret = put_path(&cub->path->sprite, path[1]);
 	else if (index == FL_TEX)
-		cub->path->floor = ft_strdup(path[1]);
+		ret = put_path(&cub->path->floor, path[1]);
 	else if (index == CE_TEX)
-		cub->path->ceil = ft_strdup(path[1]);
+		ret = put_path(&cub->path->ceil, path[1]);
 	double_ptr_mem_free(path);
-	return (1);
+	return (ret);
 }
 
 int	check_resolution(char *line)
@@ -46,7 +58,7 @@ int	check_resolution(char *line)
 	i = -1;
 	while (line[++i] != '\0')
 	{
-		if (line[i] != ' ' || !ft_isnum(line[i]))
+		if (line[i] != ' ' && (ft_isnum(line[i]) != 1))
 			return (-1);
 	}
 	return (1);
@@ -119,22 +131,31 @@ int make_color(char **color)
 	return (rgb);
 }
 
+int	check_color_overlap(t_cub *cub, int index)
+{
+	if (index == FL_COL && cub->floor_color != -1)
+		return (-1);
+	else if (index == CE_COL && cub->ceiling_color != -1)
+		return (-1);
+	return (1);
+}
+
 int parsing_color(t_cub *cub, char *line, int index)
 {
 	int rgb;
 	char **color;
 
 	rgb = -1;
-	if ((check_color_char(line + 1) < 0))
-		return (-1);
-	if ((check_color_space(line + 1) < 0))
-		return (-1);
+	if (check_color_overlap(cub, index) == -1)
+		return (print_error(COLOR_ERR));
+	if ((check_color_char(line + 1) < 0) || (check_color_space(line + 1) < 0))
+		return (print_error(COLOR_ERR));
 	if (!(color = ft_split(line + 1, ',')))
-		return (-1);
-	if (!(rgb = make_color(color)))
+		return (print_error(COLOR_ERR));
+	if ((rgb = make_color(color)) < 0)
 	{
 		double_ptr_mem_free(color);	
-		return (-1);
+		return (print_error(COLOR_ERR));
 	}
 	if (index == CE_COL)
 		cub->ceiling_color = rgb;
@@ -147,16 +168,20 @@ int parsing_color(t_cub *cub, char *line, int index)
 int parsing_resolution(t_cub *cub, char *line)
 {
 	int i;
+	int ret;
 	char **display_size;
 
 	i = 0;
-	if (!(check_resolution(line + 1)))
-		return (-1);
+	ret = 0;
+	if (cub->width != 0 || cub->height != 0)
+		ret = -1;
+	if (((check_resolution(line + 1)) == -1) || ret == -1)
+		return (print_error(WRONG_RES));
 	display_size = ft_split(line, ' ');
 	while (display_size[i])
 		i++;
 	if (i != 3)
-		return (-1);
+		return (print_error(WRONG_RES));
 	cub->width = ft_atoi(display_size[1]);
 	cub->height = ft_atoi(display_size[2]);
 	double_ptr_mem_free(display_size);
@@ -169,7 +194,7 @@ int 	parsing_map(t_cub *cub, char *line)
 	t_node	*node;
 
 	if (cub->is_map == 2)
-		return (-1);
+		return (print_error(AFTER_EMPTY));
 	tmp = cub->map;
 	cub->is_map = 1;
 	if (!(node = malloc(sizeof(t_node))))

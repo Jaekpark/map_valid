@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:53 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/18 14:19:15 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 21:50:01 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,8 @@ t_cub	*init_cub(t_cub *cub)
 {
 	if (!(cub = malloc(sizeof(t_cub))))
 		return (NULL);
+	cub->f_tex = 0;
+	cub->c_tex = 0;
 	cub->is_map = 0;
 	cub->save_opt = 0;
 	cub->width = 0;

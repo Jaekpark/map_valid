@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 11:35:54 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/15 20:23:52 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/18 17:46:11 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,12 @@ int		find_player(t_cub *cub)
 	int y;
 	int	find;
 
-	x = 0;
+	x = -1;
 	find = 0;
-	while(cub->map_buffer[x] != NULL)
+	while(cub->map_buffer[++x] != NULL)
 	{
-		y = 0;
-		while (cub->map_buffer[x][y] != '\0')
+		y = -1;
+		while (cub->map_buffer[x][++y] != '\0')
 		{
 			if (ft_strchr(DIRECTION, cub->map_buffer[x][y]))
 			{
@@ -75,10 +75,10 @@ int		find_player(t_cub *cub)
 				else if (find == 1)
 					return (-1);
 			}
-			y++;
 		}
-		x++;
 	}
+	if (find == 0)
+		return (-1);
 	return (1);
 }
 
@@ -160,27 +160,30 @@ int		after_space(char **visited)
 	}
 	return (ret);
 }
+
 void	wall_dir(t_cub *cub, char **visited, int x, int y)
 {
+	int q_x;
+	int q_y;
 	int after_sp;
+	int before_sp;
 	int last_y;
-	int half_x;
-	int half_y;
 
-	half_x = cub->rows / 2;
-	half_y = cub->cols / 2;
+	q_x = cub->rows / 4;
+	q_y = cub->cols / 4;
 	after_sp = after_space(visited);
+	before_sp = before_space(visited);
 	last_y = cub->cols - 1 - after_sp;
 	if (x == 0 && visited[x][y] == '1')
 		cub->map_buffer[x][y] = '4';
-	else if (y < last_y && y != 0 && x > half_x && x <= cub->rows - 1 && visited[x][y] == '1')
+	else if (x == cub->rows - 1 && visited[x][y] == '1')
 		cub->map_buffer[x][y] = '5';
-	else if (y >= 0 && y < half_y && visited[x][y] == '1')
+	else if (((y == 0) || (y < last_y && y <= before_sp)) && visited[x][y] == '1')
 		cub->map_buffer[x][y] = '6';
-	else if (y > half_y && y <= cub->cols - 1 && visited[x][y] == '1')
+	else if ((y == cub->cols - 1 || (y >= last_y && y < cub->cols - 1)) && visited[x][y] == '1')
 		cub->map_buffer[x][y] = '7';
 	else if (visited[x][y] == '1')
-		cub->map_buffer[x][y] = '4';
+		cub->map_buffer[x][y] = '8';
 }
 
 void 	wall_direction(t_cub *cub, char **visited)
@@ -203,7 +206,7 @@ int		map_validation(t_cub *cub)
 {
 	char **visited;
 
-	if (!(find_player(cub)))
+	if ((find_player(cub)) == -1)
 		return (print_error(NO_PLAYER));
 	if ((find_sprite(cub)) > 1)
 		return (print_error(TOO_MANY_SP));
