@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_is.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:31:13 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/06 16:57:46 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 16:15:59 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+int		is_null(char *path)
+{
+	if (path != NULL)
+		return (-1);
+	return (1);
+}
+
 int		ft_isplayer(char c)
 {
 	if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
@@ -33,7 +41,7 @@ int		ft_ismap(char *line)
 
 int		ft_isalpha(char c)
 {
-	if ((c >= 65 && c <= 90) || (c >=97 && c <= 122))
+	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
 		return (1);
 	return (-1);
 }

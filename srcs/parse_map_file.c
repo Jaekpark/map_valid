@@ -1,47 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   05_parse_map_file.c                                :+:      :+:    :+:   */
+/*   parse_map_file.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 18:03:47 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/19 16:41:08 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 16:01:45 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int			is_null(char *path)
-{
-	if (path != NULL)
-		return (-1);
-	return (1);
-}
-
-int			check_double_index(t_cub *cub, int index)
-{
-	if (index == N_TEX)
-		return (is_null(cub->path->north));
-	else if (index == S_TEX)
-		return (is_null(cub->path->south));
-	else if (index == E_TEX)
-		return (is_null(cub->path->south));
-	else if (index == W_TEX)
-		return (is_null(cub->path->west));
-	else if (index == SP_TEX)
-		return (is_null(cub->path->sprite));
-	else if (index == FL_TEX)
-		return (is_null(cub->path->floor));
-	else if (index == CE_TEX)
-		return (is_null(cub->path->ceil));
-	return (1);
-}
-
 int			parsing_path(t_cub *cub, char *line, int index)
 {
-	char **path;
-	int ret;
+	char	**path;
+	int		ret;
 
 	ret = 0;
 	if ((check_file_extension(line, TEX_EXTENSION)) != 0)
@@ -54,7 +28,7 @@ int			parsing_path(t_cub *cub, char *line, int index)
 	else if (index == E_TEX)
 		ret = put_path(&cub->path->east, path[1]);
 	else if (index == W_TEX)
-		ret =put_path(&cub->path->west, path[1]);
+		ret = put_path(&cub->path->west, path[1]);
 	else if (index == SP_TEX)
 		ret = put_path(&cub->path->sprite, path[1]);
 	else if (index == FL_TEX)
@@ -85,8 +59,8 @@ int			make_color(char **color)
 
 int			parsing_color(t_cub *cub, char *line, int index)
 {
-	int rgb;
-	char **color;
+	int		rgb;
+	char	**color;
 
 	rgb = -1;
 	if (check_color_overlap(cub, index) == -1)
@@ -97,7 +71,7 @@ int			parsing_color(t_cub *cub, char *line, int index)
 		return (print_error(COLOR_ERR));
 	if ((rgb = make_color(color)) < 0)
 	{
-		double_ptr_mem_free(color);	
+		double_ptr_mem_free(color);
 		return (print_error(COLOR_ERR));
 	}
 	if (index == CE_COL)
@@ -110,9 +84,9 @@ int			parsing_color(t_cub *cub, char *line, int index)
 
 int			parsing_resolution(t_cub *cub, char *line)
 {
-	int i;
-	int ret;
-	char **display_size;
+	int		i;
+	int		ret;
+	char	**display_size;
 
 	i = 0;
 	ret = 0;
@@ -128,10 +102,10 @@ int			parsing_resolution(t_cub *cub, char *line)
 	cub->width = ft_atoi(display_size[1]);
 	cub->height = ft_atoi(display_size[2]);
 	double_ptr_mem_free(display_size);
-	return (1);	
+	return (1);
 }
 
-int 		parsing_map(t_cub *cub, char *line)
+int			parsing_map(t_cub *cub, char *line)
 {
 	t_list	*tmp;
 	t_node	*node;

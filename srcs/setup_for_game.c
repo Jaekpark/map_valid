@@ -1,38 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   00_set_game.c                                      :+:      :+:    :+:   */
+/*   setup_for_game.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 16:03:40 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/18 23:16:28 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 15:39:17 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-// int		set_default_config(t_game *game, t_cub *cub, int fd)
-// {
-// 	int ret;
-
-// 	ret = 0;
-// 	if (fd >= 3)
-// 	{
-// 		if ((ret = read_cub(cub, fd)) == -1)
-// 			return (close_cub(cub));
-// 		if ((ret = map_validation(cub)) == -1)
-// 			return (close_cub(cub));
-// 		if (!(game = init_game(cub, game)))
-// 			return (close_cub(cub));
-// 		set_player_dir(game, cub);
-// 		init_raycast(&game->raycast);
-// 		init_floor(&game->floor);
-// 		init_sprite(&game->sprite);
-// 		load_tex(game);
-// 	}
-// 	return (1);
-// }
 
 void	set_pos(t_pos *pos, double x, double y)
 {
@@ -53,7 +31,7 @@ void	set_player_dir(t_game *game, t_cub *cub)
 	{
 		set_pos(&game->dir, 1, 0);
 		set_pos(&game->plane, 0, -0.66);
-	}	
+	}
 	else if (cub->direction == 'E')
 	{
 		set_pos(&game->dir, 0, 1);

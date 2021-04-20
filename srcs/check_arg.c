@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   01_check_arg.c                                     :+:      :+:    :+:   */
+/*   check_arg.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 18:17:15 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/19 14:47:45 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 20:22:24 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		check_file_open(char *path)
 		return (-1);
 	else if (fd >= 3)
 		close(fd);
-	return (1);	
+	return (1);
 }
 
 int		check_file_name(const char *file_name)
@@ -70,13 +70,15 @@ int		check_argv(int argc, char **argv, t_cub *cub)
 	fd = 0;
 	if (argc < 2)
 		return (print_error(NO_ARG));
+	if (argc > 3)
+		return (print_error(TOO_MANY_ARG));
 	else if (argc >= 2)
 	{
 		if (check_file_name(argv[1]) != 0)
 			return (print_error(WRONG_NAME));
 		if ((fd = open(argv[1], O_RDONLY)) < 0)
 			return (print_error(OPEN_ERR));
-		if (argc >= 3)
+		if (argc == 3)
 		{
 			if (check_option(argv[2]) != 0)
 				return (print_error(WRONG_OPT));

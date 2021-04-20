@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   09_engine_for_floor.c                              :+:      :+:    :+:   */
+/*   engine_for_floor.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/19 15:45:12 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/19 15:45:25 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 14:50:59 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,14 @@
 void	floor_tex_casting(t_game *game, t_floor *floor, int x, int y)
 {
 	int color;
-	
+
 	color = 0;
-	floor->tex_x = (int)(game->tex[FL_TEX].width * (floor->fl.x - floor->ce_x)) & (game->tex[FL_TEX].width - 1);
-	floor->tex_y = (int)(game->tex[FL_TEX].height * (floor->fl.y - floor->ce_y)) & (game->tex[FL_TEX].height - 1);
-	color = game->tex[FL_TEX].data[game->tex[FL_TEX].width * floor->tex_y + floor->tex_x];
+	floor->tex_x = (int)(game->tex[FL_TEX].width * (floor->fl.x - floor->ce_x))
+					& (game->tex[FL_TEX].width - 1);
+	floor->tex_y = (int)(game->tex[FL_TEX].height * (floor->fl.y - floor->ce_y))
+					& (game->tex[FL_TEX].height - 1);
+	color = game->tex[FL_TEX].data[game->tex[FL_TEX].width
+			* floor->tex_y + floor->tex_x];
 	color = (color >> 1) & 8355711;
 	game->buf[y][x] = color;
 }
@@ -29,9 +32,12 @@ void	ceil_tex_casting(t_game *game, t_floor *floor, int x, int y)
 	int color;
 
 	color = 0;
-	floor->tex_x = (int)(game->tex[CE_TEX].width * (floor->fl.x - floor->ce_x)) & (game->tex[CE_TEX].width - 1);
-	floor->tex_y = (int)(game->tex[CE_TEX].height * (floor->fl.y - floor->ce_y)) & (game->tex[CE_TEX].height - 1);
-	color = game->tex[CE_TEX].data[game->tex[CE_TEX].width * floor->tex_y + floor->tex_x];
+	floor->tex_x = (int)(game->tex[CE_TEX].width * (floor->fl.x - floor->ce_x))
+					& (game->tex[CE_TEX].width - 1);
+	floor->tex_y = (int)(game->tex[CE_TEX].height * (floor->fl.y - floor->ce_y))
+					& (game->tex[CE_TEX].height - 1);
+	color = game->tex[CE_TEX].data[game->tex[CE_TEX].width
+					* floor->tex_y + floor->tex_x];
 	color = (color >> 1) & 8355711;
 	game->buf[game->height - y - 1][x] = color;
 }

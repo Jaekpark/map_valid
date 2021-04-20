@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   03_init_for_raycasting.c                           :+:      :+:    :+:   */
+/*   init_for_raycasting.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/19 15:09:43 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/19 15:11:21 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 18:45:17 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,15 @@ void	init_raycast(t_raycast *raycast)
 
 void	init_sprite(t_sprite *sprite)
 {
+	sprite->color = 0;
 	sprite->trans.x = 0;
 	sprite->trans.y = 0;
 	sprite->v_mv = 0;
 	sprite->u_div = 1;
 	sprite->v_div = 1;
-	sprite->v_mv_screen = 0;
-	sprite->sp_width = 0;
-	sprite->sp_height = 0;
+	sprite->mv_screen = 0;
+	sprite->w = 0;
+	sprite->h = 0;
 	sprite->screen_x = 0;
 	sprite->start_x = 0;
 	sprite->start_y = 0;
@@ -78,4 +79,6 @@ void	init_key(t_key *key)
 	key->esc = 0;
 	key->s = 0;
 	key->d = 0;
+	key->q = 0;
+	key->e = 0;
 }

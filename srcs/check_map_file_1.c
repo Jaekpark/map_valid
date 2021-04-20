@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   01_check_map_file_1.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/19 14:42:19 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/19 14:44:52 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 14:17:15 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int 	is_tex(char *line)
+int		is_tex(char *line)
 {
 	if (ft_strncmp(line, "NO", 2) == 0)
 		return (N_TEX);
@@ -52,7 +52,7 @@ int		check_path_exist(t_cub *cub)
 	return (1);
 }
 
-int	check_resolution(char *line)
+int		check_resolution(char *line)
 {
 	int i;
 

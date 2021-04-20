@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize.c                                       :+:      :+:    :+:   */
+/*   make_bmp.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/15 15:04:17 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/20 16:15:31 by jaekpark         ###   ########.fr       */
+/*   Created: 2021/04/20 20:20:12 by jaekpark          #+#    #+#             */
+/*   Updated: 2021/04/20 20:20:23 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int		ft_lstsize(t_list *map)
+void	make_bmp(t_game *game)
 {
-	t_node	*temp;
-	int		size;
-
-	temp = map->head;
-	size = 0;
-	while (temp != NULL)
-	{
-		temp = temp->next;
-		size++;
-	}
-	return (size);
+	calc(game);
+	draw(game);
+	save_bmp(game);
+	exit_game(game);
 }

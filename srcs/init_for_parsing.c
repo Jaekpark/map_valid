@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   03_init_for_parsing.c                              :+:      :+:    :+:   */
+/*   init_for_parsing.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/19 15:09:38 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/19 15:10:27 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 19:53:49 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
 
 t_list	*init_list(t_list *list)
 {
@@ -64,20 +63,28 @@ t_cub	*init_cub(t_cub *cub)
 	return (cub);
 }
 
-t_win 	*init_win(t_cub *cub, t_win *window)
+t_win	*init_win(t_cub *cub, t_win *wi)
 {
-	if (!(window = malloc(sizeof(t_win))))
+	int		w;
+	int		h;
+	t_img	*tmp;
+
+	if (!(wi = malloc(sizeof(t_win))))
 		return (NULL);
-	window->ptr = mlx_init();
-	mlx_get_screen_size(window->ptr, &window->sys_width, &window->sys_height);
-	set_screen_size(cub, window);
-	window->win = mlx_new_window(window->ptr, (int)window->screen_size.x, (int)window->screen_size.y, "cub3D");
-	window->screen.img = mlx_new_image(window->ptr, (int)window->screen_size.x, (int)window->screen_size.y);
-	window->screen.data = (int *)mlx_get_data_addr(window->screen.img, &window->screen.bpp, &window->screen.size_l, &window->screen.endian);
-	return (window);
+	wi->ptr = mlx_init();
+	mlx_get_screen_size(wi->ptr, &wi->sys_width, &wi->sys_height);
+	set_screen_size(cub, wi);
+	w = (int)wi->screen_size.x;
+	h = (int)wi->screen_size.y;
+	wi->win = mlx_new_window(wi->ptr, w, h, "cub3D");
+	tmp = &wi->screen;
+	tmp->img = mlx_new_image(wi->ptr, w, h);
+	tmp->data = (int *)mlx_get_data_addr(tmp->img, &tmp->bpp,
+				&tmp->size_l, &tmp->endian);
+	return (wi);
 }
 
-t_game 	*init_game(t_cub *cub, t_game *game)
+t_game	*init_game(t_cub *cub, t_game *game)
 {
 	if (!(game = malloc(sizeof(t_game))))
 		return (NULL);

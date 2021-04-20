@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   09_run_ray_cast.c                                  :+:      :+:    :+:   */
+/*   run_ray_cast.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 16:34:59 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/20 02:28:44 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 20:27:37 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,22 @@
 
 void	draw(t_game *game)
 {
-	int x;
-	int y;
+	t_game	*g;
+	t_win	*w;
+	int		x;
+	int		y;
 
 	y = 0;
-	while (y < (int)game->height)
+	g = game;
+	w = game->window;
+	while (y < (int)g->height)
 	{
 		x = -1;
-		while (++x < (int)game->width)
-			game->window->screen.data[y * (int)game->width + x] = game->buf[y][x];
+		while (++x < (int)g->width)
+			g->window->screen.data[y * (int)g->width + x] = g->buf[y][x];
 		y++;
 	}
-	mlx_put_image_to_window(game->window->ptr, game->window->win, game->window->screen.img, 0, 0);
+	mlx_put_image_to_window(w->ptr, w->win, w->screen.img, 0, 0);
 }
 
 void	calc(t_game *game)
@@ -57,15 +61,10 @@ void	calc(t_game *game)
 	}
 }
 
-int main_loop(t_game *game)
+int		main_loop(t_game *game)
 {
 	calc(game);
 	draw(game);
 	key_update(game);
-	if (game->cub->save_opt == 1)
-	{
-		save_bmp(game);
-		exit_game(game);
-	}
 	return (0);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   07_valid_map_utils.c                               :+:      :+:    :+:   */
+/*   utils_for_validation.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/19 15:30:18 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/19 15:33:42 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 15:56:18 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int		find_sprite(t_cub *cub)
 	int	y;
 
 	x = -1;
-	while(cub->map_buffer[++x] != NULL)
+	while (cub->map_buffer[++x] != NULL)
 	{
 		y = -1;
 		while (cub->map_buffer[x][++y] != '\0')
@@ -46,7 +46,7 @@ int		find_sprite(t_cub *cub)
 			}
 		}
 	}
-	return (cub->sprite_cnt);	
+	return (cub->sprite_cnt);
 }
 
 int		find_player(t_cub *cub)
@@ -57,27 +57,22 @@ int		find_player(t_cub *cub)
 
 	x = -1;
 	find = 0;
-	while(cub->map_buffer[++x] != NULL)
+	while (cub->map_buffer[++x] != NULL)
 	{
 		y = -1;
 		while (cub->map_buffer[x][++y] != '\0')
 		{
 			if (ft_strchr(DIRECTION, cub->map_buffer[x][y]))
 			{
-				if (find == 0)
-				{
-					cub->player.x = x;
-					cub->player.y = y;
-					cub->direction = cub->map_buffer[x][y];
-					cub->map_buffer[x][y] = '0';
-					find = 1;
-				}
-				else if (find == 1)
-					return (-1);
+				cub->player.x = x;
+				cub->player.y = y;
+				cub->direction = cub->map_buffer[x][y];
+				cub->map_buffer[x][y] = '0';
+				find++;
 			}
 		}
 	}
-	if (find == 0)
+	if (find != 1)
 		return (-1);
 	return (1);
 }

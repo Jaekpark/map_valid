@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   04_read_map_file.c                                 :+:      :+:    :+:   */
+/*   read_map_file.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:30:50 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/19 16:05:42 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 15:42:59 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int			read_cub(t_cub *cub, int fd)
 		ret = parse_line(cub, line, eof);
 		free(line);
 		if (ret < 0 || eof <= 0)
-			break;
+			break ;
 	}
 	close(fd);
 	if (ret != -1 && eof == 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   constant.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 20:22:38 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/20 01:44:51 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 19:43:49 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@
 # define BMP_OPEN_ERR 118
 # define BMP_HEAD_ERR 119
 # define BMP_DATA_ERR 120
+# define TOO_MANY_ARG 121
 
 # define N_TEX 0
 # define S_TEX 1

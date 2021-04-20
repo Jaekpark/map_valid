@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   02_print_error.c                                   :+:      :+:    :+:   */
+/*   print_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:29:48 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/20 01:45:59 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 19:45:32 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ int		print_error_b(int error)
 		printf("Error : Identifier exist in the map.\n");
 	else if (error == DOUBLE_PATH)
 		printf("Error : Texture path already exist.\n");
-	else if (error == UNABLE_MAP_CHAR)
-		printf("Error : Invalid map. Wrong characters in the map.\n");
 	else if (error == BMP_OPEN_ERR)
 		printf("Error : Failed make bmp file.\n");
 	else if (error == BMP_HEAD_ERR)
@@ -50,7 +48,7 @@ int		print_error(int error)
 	else if (error == PARSING_ERR)
 		printf("Error : Parsing error. Please check your '.cub' file.\n");
 	else if (error == NO_PLAYER)
-		printf("Error : Invalid map. Can't find player.\n");
+		printf("Error : Invalid map. Missing or more than one player.\n");
 	else if (error == WRONG_NAME)
 		printf("Error : Wrong file name. Please check your file name.\n");
 	else if (error == WRONG_OPT)
@@ -58,11 +56,15 @@ int		print_error(int error)
 	else if (error == PARSING_ERR)
 		printf("Error : Parsing error. Please check your map file.\n");
 	else if (error == OPEN_ERR)
-		printf("Error : Can't open file. Please check your file name or directory.\n");
+		printf("Error : Can't open file.\n");
 	else if (error == NOT_SURROUNDED)
 		printf("Error : Invalid map. Map isn't surrounded by walls.\n");
+	else if (error == UNABLE_MAP_CHAR)
+		printf("Error : Invalid map. Wrong characters in the map.\n");
 	else if (error == NO_TEX)
 		printf("Error : Texture file does not exists.\n");
+	else if (error == TOO_MANY_ARG)
+		printf("Error : Too many arguments.\n");
 	else
 		return (print_error_b(error));
 	return (-1);

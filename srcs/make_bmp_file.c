@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   12_make_bmp_file.c                                 :+:      :+:    :+:   */
+/*   make_bmp_file.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/19 17:38:07 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/20 01:53:47 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 15:38:49 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ static void	set_short(unsigned char *header, short value)
 	header[1] = (unsigned char)(value >> 8);
 }
 
-static int write_header(t_game *game, int fd, int size)
+static int	write_header(t_game *game, int fd, int size)
 {
 	int				i;
-	int	width;
-	int height;
+	int				width;
+	int				height;
 	unsigned char	header[54];
 
 	i = 0;
@@ -55,7 +55,7 @@ static int write_header(t_game *game, int fd, int size)
 	return (write(fd, header, 54));
 }
 
-int	write_img_data(t_game *game, int fd, int pad)
+int			write_img_data(t_game *game, int fd, int pad)
 {
 	int		i;
 	int		j;
@@ -75,10 +75,9 @@ int	write_img_data(t_game *game, int fd, int pad)
 	return (1);
 }
 
-int
-	save_bmp(t_game *game)
+int			save_bmp(t_game *game)
 {
-	t_win	*w;
+	t_win		*w;
 	int			size;
 	int			fd;
 	int			pad;

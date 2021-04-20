@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   01_check_map_file_2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/19 14:45:22 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/19 14:46:27 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 14:18:05 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
 
 int		check_color_exist(t_cub *cub)
 {
@@ -61,7 +60,7 @@ int		check_color_char(char *line)
 {
 	int	i;
 	int	comma;
-	
+
 	i = -1;
 	comma = 0;
 	if (!line)

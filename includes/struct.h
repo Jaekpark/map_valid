@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaekpark <jaekpark@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 20:22:46 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/19 18:20:08 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 18:41:22 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ typedef struct		s_raycast
 	int				draw_start;
 	int				draw_end;
 	int				map_x;
-	int 			map_y;
+	int				map_y;
 	int				step_x;
 	int				step_y;
 	int				tex_idx;
@@ -120,6 +120,8 @@ typedef struct		s_key
 	int				s;
 	int				a;
 	int				d;
+	int				q;
+	int				e;
 	int				esc;
 }					t_key;
 
@@ -129,20 +131,20 @@ typedef struct		s_sprite
 	t_pos			sp;
 	t_pos			trans;
 	double			v_mv;
+	int				color;
 	int				u_div;
 	int				v_div;
-	int				v_mv_screen;
-	int				sp_width;
-	int				sp_height;
+	int				mv_screen;
+	int				w;
+	int				h;
 	int				screen_x;
 	int				start_x;
 	int				start_y;
 	int				end_x;
-	int 			end_y;
+	int				end_y;
 	int				tex_x;
 	int				tex_y;
 	double			inv;
-	
 }					t_sprite;
 
 typedef struct		s_cub
