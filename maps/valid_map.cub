@@ -1,11 +1,9 @@
-R 1200 800
+R 1600 800
 NO ./textures/wall_north.xpm
 SO ./textures/wall_south.xpm
 WE ./textures/wall_west.xpm
 EA ./textures/wall_east.xpm
-ST ./textures/ceil_texture.xpm
-FT ./textures/floor_texture.xpm
-S ./textures/amongus.xpm
+S ./textures/sprite_among.xpm
 F 123,123,243
 C 211,123,123
 

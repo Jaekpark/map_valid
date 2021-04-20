@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 14:10:02 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/20 20:25:56 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 21:03:06 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ void	clear_buf(t_game *game);
 void	clear_tex(t_game *game);
 void	clear_window(t_win *window);
 void	clear_game(t_game *game);
+void	clear_texture(t_game *game, t_tex *tex);
 
 int		save_bmp(t_game *game);
 void	make_bmp(t_game *game);

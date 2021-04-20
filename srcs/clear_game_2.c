@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/20 15:20:42 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/20 15:24:55 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 21:05:24 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	clear_tex(t_game *game)
 	int i;
 
 	i = -1;
-	while (++i <= CE_TEX)
+	while (++i <= M_TEX)
 	{
 		if (game->tex[i].img != NULL && game->tex[i].data != NULL)
 		{
@@ -68,6 +68,12 @@ void	clear_tex(t_game *game)
 			game->tex[i].data = NULL;
 		}
 	}
+	if (game->cub->sprite_cnt == 1)
+		clear_texture(game, &game->tex[SP_TEX]);
+	if (game->cub->f_tex == 1)
+		clear_texture(game, &game->tex[FL_TEX]);
+	if (game->cub->c_tex == 1)
+		clear_texture(game, &game->tex[CE_TEX]);
 }
 
 void	clear_window(t_win *window)
@@ -84,9 +90,9 @@ void	clear_game(t_game *game)
 {
 	if (!game)
 		return ;
+	clear_tex(game);
 	if (game->cub != NULL)
 		clear_cub(game->cub);
-	clear_tex(game);
 	if (game->window != NULL)
 		clear_window(game->window);
 	if (game->buf != NULL || game->z_buf != NULL)

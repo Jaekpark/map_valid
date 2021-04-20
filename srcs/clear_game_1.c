@@ -6,7 +6,7 @@
 /*   By: jaekpark <jaekpark@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/26 14:31:09 by jaekpark          #+#    #+#             */
-/*   Updated: 2021/04/20 15:24:41 by jaekpark         ###   ########.fr       */
+/*   Updated: 2021/04/20 21:07:39 by jaekpark         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,19 @@ void	clear_map_buffer(char **map_buffer)
 	}
 	free(map_buffer);
 	map_buffer = NULL;
+}
+
+void	clear_texture(t_game *game, t_tex *tex)
+{
+	if (tex->path != NULL)
+	{
+		free(tex->path);
+		tex->path = NULL;
+	}
+	if (tex->img != NULL)
+	{
+		mlx_destroy_image(game->window->ptr, tex->img);
+		tex->img = NULL;
+		tex->data = NULL;
+	}
 }
